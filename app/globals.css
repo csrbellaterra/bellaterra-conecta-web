@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   DESIGN TOKENS — Bellaterra Conecta
+   Paleta derivada de la maqueta aprobada: crema cálido, blanco roto,
+   oliva oscuro/natural, negro cálido. Deliberadamente NO "eco": sin
+   verdes brillantes, sin iconografía de reciclaje. PLASTY se comunica
+   con la misma paleta editorial que el resto del sitio.
+   ============================================ */
+:root {
+  --color-background: #f7f3ea;
+  --color-surface: #fffdf8;
+  --color-text: #201d17;
+  --color-muted: #6b6558;
+  --color-olive: #5c6142;
+  --color-olive-dark: #33351f;
+  --color-border: rgba(32, 29, 23, 0.12);
+  --color-ink: #14130f;
+
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+  --space-2xl: 6.5rem;
+
+  --radius-card: 6px;
+  --radius-pill: 999px;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-text);
+}
+
+::selection {
+  background: var(--color-olive);
+  color: var(--color-surface);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-olive-dark);
+  outline-offset: 3px;
+}
