@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { ContactPage } from "@/types/content";
 import Container from "@/components/ui/Container";
 import AnimatedIn from "@/components/ui/AnimatedIn";
-import { CONTACT_HERO_HEADLINE, CONTACT_INTENT_OPTIONS } from "@/lib/contactCopy";
 
 /**
  * Router de intención de /contacto (Fase 5) — deliberadamente NO es un
@@ -13,23 +12,20 @@ import { CONTACT_HERO_HEADLINE, CONTACT_INTENT_OPTIONS } from "@/lib/contactCopy
  * descripción/flecha son la excepción permitida a la regla "no cards"
  * (ver CLAUDE.md).
  *
- * Contenido: contact.heroEyebrow/heroHeadline/heroBody/intents[]
- * (Sanity, documento `contactPage`) → lib/contactCopy.ts (fallback).
- * La prioridad se aplica documento a documento en `intents` (si Sanity
- * ya tiene alguna opción cargada, se usan solo esas — no se mezclan
- * las dos listas) para que desactivar/reordenar desde Sanity funcione
- * de forma predecible. Solo se muestran las opciones con
+ * Contenido: `contact` llega YA resuelto con prioridad Sanity →
+ * fallback (ver lib/content.ts → getContactPage, que hace el merge
+ * campo a campo con lib/contactCopy.ts vía seed-data.ts) — este
+ * componente no vuelve a aplicar fallbacks, solo lee `contact`
+ * directamente. Solo se muestran las intenciones con
  * `enabled !== false`, ordenadas por `order`.
  *
  * Mobile: cada fila es directamente táctil y grande, sin acordeones
  * innecesarios — un solo toque lleva al formulario correspondiente.
  */
-export default function ContactIntentRouter({ contact, legacyTitle }: { contact: ContactPage; legacyTitle?: string }) {
-  const eyebrow = contact.heroEyebrow;
-  const headline = contact.heroHeadline || legacyTitle || CONTACT_HERO_HEADLINE;
-  const body = contact.heroBody;
+export default function ContactIntentRouter({ contact }: { contact: ContactPage }) {
+  const { heroEyebrow: eyebrow, heroHeadline: headline, heroBody: body } = contact;
 
-  const intents = (contact.intents && contact.intents.length > 0 ? contact.intents : CONTACT_INTENT_OPTIONS)
+  const intents = (contact.intents ?? [])
     .filter((intent) => intent.enabled !== false)
     .slice()
     .sort((a, b) => a.order - b.order);

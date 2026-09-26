@@ -21,7 +21,7 @@ export default function ImpactCounter({ impact }: { impact: ImpactSettings }) {
   const showKg = impact.impactEnabled && typeof impact.impactKg === "number";
   const showContributions = impact.impactEnabled && typeof impact.totalContributions === "number";
   const showUpdatedAt = Boolean(impact.impactUpdatedAt);
-  const showAnnualTarget = impact.annualTargetEnabled && typeof impact.annualTarget === "number";
+  const showAnnualTarget = impact.impactEnabled && impact.annualTargetEnabled && typeof impact.annualTarget === "number";
   const hasAnyFigure = showKg || showContributions;
 
   const updatedAtLabel = showUpdatedAt

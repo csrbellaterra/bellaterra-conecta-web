@@ -9,7 +9,7 @@ import type {
   SiteSettings,
   StoryPage,
 } from "@/types/content";
-import { CONTACT_HERO_HEADLINE, CONTACT_INTENT_OPTIONS } from "@/lib/contactCopy";
+import { CONTACT_HERO_BODY, CONTACT_HERO_EYEBROW, CONTACT_HERO_HEADLINE, CONTACT_INTENT_OPTIONS } from "@/lib/contactCopy";
 
 /**
  * DATOS LOCALES DE RESPALDO
@@ -451,7 +451,9 @@ export const storyPage: StoryPage = {
  * como respaldo cuando contactPage no los define.
  */
 export const contactPage: ContactPage = {
+  heroEyebrow: CONTACT_HERO_EYEBROW,
   heroHeadline: CONTACT_HERO_HEADLINE,
+  heroBody: CONTACT_HERO_BODY,
   intents: CONTACT_INTENT_OPTIONS,
 };
 

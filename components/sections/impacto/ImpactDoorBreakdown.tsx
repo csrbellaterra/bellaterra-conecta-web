@@ -5,14 +5,21 @@ import AnimatedIn from "@/components/ui/AnimatedIn";
 
 /**
  * "Cinco puertas, un impacto compartido" — lista editorial, no
- * dashboard de barras ni porcentajes inventados. Cada fila muestra el
- * nombre de la puerta y, solo si existen como dato real en Sanity
- * (impact.doorImpact[].contributions/kg/percentage), sus cifras. Sin
- * dato real, la fila se muestra igualmente (con el enlace a la
- * puerta) pero sin números — nunca un 0 ni un porcentaje calculado a
- * partir de un total que no existe.
+ * dashboard de barras ni porcentajes inventados. El nombre de la
+ * puerta y el enlace SIEMPRE se muestran (es contenido editorial, no
+ * una métrica). Las cifras (contributions/kg/percentage) son el
+ * "breakdown cuantitativo" que `impactEnabled` controla: son datos
+ * acumulados todavía no verificados, así que solo se muestran cuando
+ * `impactEnabled` es true Y el dato concreto está definido — nunca un
+ * 0 ni un porcentaje calculado a partir de un total que no existe.
  */
-export default function ImpactDoorBreakdown({ doorImpact }: { doorImpact: DoorImpactItem[] }) {
+export default function ImpactDoorBreakdown({
+  doorImpact,
+  impactEnabled,
+}: {
+  doorImpact: DoorImpactItem[];
+  impactEnabled: boolean;
+}) {
   if (doorImpact.length === 0) return null;
 
   return (
@@ -28,7 +35,8 @@ export default function ImpactDoorBreakdown({ doorImpact }: { doorImpact: DoorIm
         <div className="flex flex-col" role="list">
           {doorImpact.map((item, index) => {
             const hasFigures =
-              typeof item.contributions === "number" || typeof item.kg === "number" || typeof item.percentage === "number";
+              impactEnabled &&
+              (typeof item.contributions === "number" || typeof item.kg === "number" || typeof item.percentage === "number");
 
             return (
               <AnimatedIn key={item.door} delay={index * 0.05} className="border-t border-border first:border-t-0">

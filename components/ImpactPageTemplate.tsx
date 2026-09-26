@@ -30,7 +30,7 @@ export default function ImpactPageTemplate({
       <main>
         <ImpactHero impact={impact} />
         <ImpactCounter impact={impact} />
-        <ImpactDoorBreakdown doorImpact={doorImpact} />
+        <ImpactDoorBreakdown doorImpact={doorImpact} impactEnabled={Boolean(impact.impactEnabled)} />
         <ImpactHowItWorks doorImpact={doorImpact} />
         <ImpactCommunity enabled={Boolean(impact.hallOfFameEnabled)} contributors={contributors} />
         <ImpactFinalCta impact={impact} />

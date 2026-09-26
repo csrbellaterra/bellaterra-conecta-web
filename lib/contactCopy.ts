@@ -13,7 +13,9 @@ import type { ContactIntent } from "@/types/content";
  * Sanity y fallback campo a campo sin dos formas de datos distintas.
  */
 
+export const CONTACT_HERO_EYEBROW = "CONTACTO";
 export const CONTACT_HERO_HEADLINE = "¿Qué te gustaría hacer en Bellaterra Conecta?";
+export const CONTACT_HERO_BODY = "Cuéntanos qué te trae hasta aquí y te llevamos al lugar adecuado.";
 
 export const CONTACT_INTENT_OPTIONS: ContactIntent[] = [
   {

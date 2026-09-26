@@ -29,6 +29,7 @@ import type {
   ContactPage,
   Door,
   DoorId,
+  DoorImpactItem,
   Event,
   FormDoc,
   GalleryCategory,
@@ -73,10 +74,79 @@ export async function getSiteSettings(preview = false): Promise<SiteSettings> {
   return data ?? seedSiteSettings;
 }
 
+/**
+ * Combina el `doorImpact[]` de Sanity con el de seed-data.ts PUERTA A
+ * PUERTA (no documento-a-documento ni array-a-array): si el editor
+ * solo ha rellenado el texto de referencia de Eventos en Sanity, las
+ * otras cuatro puertas (Empresas, Estancias, Comunidad, Pickleball)
+ * siguen mostrando su texto de referencia de respaldo, en vez de
+ * desaparecer solo porque el array de Sanity no está completo.
+ * Recorre el orden de seedItems (las 5 puertas conocidas) y añade al
+ * final cualquier puerta que solo exista en Sanity.
+ */
+function mergeDoorImpact(sanityItems: DoorImpactItem[] | undefined, seedItems: DoorImpactItem[]): DoorImpactItem[] {
+  const sanityByDoor = new Map((sanityItems ?? []).map((item) => [item.door, item]));
+
+  const merged = seedItems.map((seedItem) => {
+    const sanityItem = sanityByDoor.get(seedItem.door);
+    if (!sanityItem) return seedItem;
+    sanityByDoor.delete(seedItem.door);
+    return {
+      door: seedItem.door,
+      doorName: sanityItem.doorName || seedItem.doorName,
+      enabled: sanityItem.enabled ?? seedItem.enabled,
+      contributionText: sanityItem.contributionText || seedItem.contributionText,
+      contributions: sanityItem.contributions ?? seedItem.contributions,
+      kg: sanityItem.kg ?? seedItem.kg,
+      percentage: sanityItem.percentage ?? seedItem.percentage,
+    };
+  });
+
+  // Puertas que solo existen en Sanity (no en el fallback conocido) — se añaden tal cual, sin inventar nada.
+  return [...merged, ...sanityByDoor.values()];
+}
+
+/**
+ * Prioridad Sanity → fallback CAMPO A CAMPO, no documento-a-documento.
+ * Antes, si el documento `impact` de Sanity existía pero todavía no
+ * tenía rellenos heroEyebrow/heroHeadline/doorImpact/finalCta*, toda
+ * la página quedaba vacía porque `data ?? seedImpactSettings` descarta
+ * el fallback en cuanto Sanity devuelve CUALQUIER documento, aunque
+ * sus campos individuales estén sin rellenar. Ahora cada campo cae a
+ * su equivalente de seed-data.ts si Sanity no lo tiene definido — así
+ * el hero, "Cómo funciona PLASTY" y el CTA final se ven siempre,
+ * tengas o no ya cargada la tabla de impacto verificada.
+ *
+ * `impactEnabled` en sí SOLO controla la visibilidad de las cifras
+ * acumuladas no verificadas (impactKg, totalContributions, cifras del
+ * breakdown por puerta, objetivo anual) — eso lo aplican los
+ * componentes (ImpactCounter, ImpactDoorBreakdown), no esta función.
+ */
 export async function getImpactSettings(preview = false): Promise<ImpactSettings> {
   if (!isSanityConfigured) return seedImpactSettings;
   const data = await fetchSanity<ImpactSettings>(impactSettingsQuery, {}, preview);
-  return data ?? seedImpactSettings;
+  if (!data) return seedImpactSettings;
+
+  return {
+    impactEnabled: data.impactEnabled ?? seedImpactSettings.impactEnabled,
+    impactKg: data.impactKg ?? seedImpactSettings.impactKg,
+    impactUpdatedAt: data.impactUpdatedAt ?? seedImpactSettings.impactUpdatedAt,
+    impactMethodology: data.impactMethodology ?? seedImpactSettings.impactMethodology,
+    impactMethodologyUrl: data.impactMethodologyUrl ?? seedImpactSettings.impactMethodologyUrl,
+    heroEyebrow: data.heroEyebrow || seedImpactSettings.heroEyebrow,
+    heroHeadline: data.heroHeadline || seedImpactSettings.heroHeadline,
+    heroBody: data.heroBody || seedImpactSettings.heroBody,
+    heroMedia: data.heroMedia ?? seedImpactSettings.heroMedia,
+    totalContributions: data.totalContributions ?? seedImpactSettings.totalContributions,
+    annualTargetEnabled: data.annualTargetEnabled ?? seedImpactSettings.annualTargetEnabled,
+    annualTarget: data.annualTarget ?? seedImpactSettings.annualTarget,
+    doorImpact: mergeDoorImpact(data.doorImpact, seedImpactSettings.doorImpact ?? []),
+    hallOfFameEnabled: data.hallOfFameEnabled ?? seedImpactSettings.hallOfFameEnabled,
+    finalCtaHeadline: data.finalCtaHeadline || seedImpactSettings.finalCtaHeadline,
+    finalCtaBody: data.finalCtaBody || seedImpactSettings.finalCtaBody,
+    finalCtaLabel: data.finalCtaLabel || seedImpactSettings.finalCtaLabel,
+    finalCtaUrl: data.finalCtaUrl || seedImpactSettings.finalCtaUrl,
+  };
 }
 
 export async function getHomePage(preview = false): Promise<HomePage> {
@@ -105,18 +175,33 @@ export async function getStoryPage(preview = false): Promise<StoryPage> {
 }
 
 /**
- * /contacto (Fase 5, corrección posterior) — documento único, ver
- * types/content.ts → ContactPage. Prioridad Sanity → fallback: si el
- * documento existe pero todavía no tiene `intents` cargados, el
- * fallback de seed-data.ts (a su vez basado en
- * lib/contactCopy.ts) sigue resolviendo el router — ver
- * ContactIntentRouter, que aplica esa cadena de prioridad campo a
- * campo, no documento a documento.
+ * /contacto — documento único, ver types/content.ts → ContactPage.
+ * Prioridad Sanity → fallback CAMPO A CAMPO (mismo motivo y mismo
+ * patrón que getImpactSettings): si `contactPage` ya existe en Sanity
+ * pero todavía no tiene heroEyebrow/heroBody rellenados, por ejemplo,
+ * `data ?? seedContactPage` descartaría el fallback entero solo porque
+ * el documento existe, dejando esos textos vacíos. Ahora cada campo
+ * escalar cae a lib/contactCopy.ts (vía seedContactPage) si Sanity no
+ * lo tiene definido. `intents` es la única excepción: se resuelve
+ * documento-a-documento (si Sanity ya tiene alguna intención cargada,
+ * se usan solo esas, sin mezclar con el fallback) para que desactivar
+ * u ordenar intenciones desde Sanity sea predecible.
  */
 export async function getContactPage(preview = false): Promise<ContactPage> {
   if (!isSanityConfigured) return seedContactPage;
   const data = await fetchSanity<ContactPage>(contactPageQuery, {}, preview);
-  return data ?? seedContactPage;
+  if (!data) return seedContactPage;
+
+  return {
+    heroEyebrow: data.heroEyebrow || seedContactPage.heroEyebrow,
+    heroHeadline: data.heroHeadline || seedContactPage.heroHeadline,
+    heroBody: data.heroBody || seedContactPage.heroBody,
+    intents: data.intents && data.intents.length > 0 ? data.intents : seedContactPage.intents,
+    locationText: data.locationText || seedContactPage.locationText,
+    email: data.email || seedContactPage.email,
+    instagramUrl: data.instagramUrl || seedContactPage.instagramUrl,
+    mapsUrl: data.mapsUrl || seedContactPage.mapsUrl,
+  };
 }
 
 export async function getPage(slug: string, preview = false): Promise<Page | undefined> {
