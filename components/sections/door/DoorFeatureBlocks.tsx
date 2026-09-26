@@ -2,6 +2,7 @@ import type { Door, FeatureItem, Media as MediaV2, MediaField, SanityImage } fro
 import Container from "@/components/ui/Container";
 import Media from "@/components/ui/Media";
 import AnimatedIn from "@/components/ui/AnimatedIn";
+import EditorialMediaList from "@/components/ui/EditorialMediaList";
 import { cn } from "@/lib/utils";
 import { mediaFieldFromV2 } from "@/lib/media";
 import { DOOR_PAGE_COPY } from "@/lib/doorCopy";
@@ -18,12 +19,20 @@ function resolveMedia(itemMedia: MediaV2 | undefined, fallbackImage: SanityImage
 
 /**
  * "Qué puedes hacer aquí" (Empresas) / "Qué puedes celebrar" (Eventos)
- * — bloques visuales grandes, NO tarjetas pequeñas tipo SaaS. Lee
- * door.featureSections (solo los de tipo featureItem; los timelineItem
- * que pueda contener ese mismo array se ignoran aquí, ver
- * DoorTimeline para esos) con fallback a lib/doorCopy.ts cuando el
- * array está vacío en Sanity. Composición asimétrica en desktop
- * (el primer bloque ocupa más espacio), stack limpio en mobile.
+ * — Fase 3.1: dirección editorial "luxury hospitality" (Passalacqua /
+ * Mas Girbau). La finca se descubre, no se cataloga: fuera cards y
+ * grids tipo masonry, dentro fotografía protagonista y ritmo
+ * editorial. Nueva regla del design system: NO usar cards por defecto
+ * para contenido editorial (experiencias, usos, espacios) — las cards
+ * quedan solo para interfaces funcionales (selector de puertas, Family
+ * Days, formularios, relacionadas).
+ *
+ * Lee door.featureSections (solo los de tipo featureItem) con fallback
+ * a lib/doorCopy.ts cuando el array está vacío en Sanity. Empresas usa
+ * tres bloques alternados a ancho completo; Eventos usa una lista
+ * editorial numerada + una fotografía grande con crossfade
+ * (EditorialMediaList, ver ese componente para el detalle mobile/
+ * desktop y prefers-reduced-motion).
  */
 export default function DoorFeatureBlocks({ door }: { door: Door }) {
   const copy = DOOR_PAGE_COPY[door.id as "empresas" | "eventos"];
@@ -42,38 +51,74 @@ export default function DoorFeatureBlocks({ door }: { door: Door }) {
           media: imageAsMediaField(door.gallery?.[index]),
         }));
 
+  const heading = door.featuresTitle || copy.featureSectionsHeading;
+
+  if (door.id === "eventos") {
+    return (
+      <section className="bg-background py-16 sm:py-24 lg:py-28">
+        <Container>
+          <AnimatedIn>
+            <h2 className="max-w-lg font-serif text-3xl text-text sm:text-4xl">{heading}</h2>
+          </AnimatedIn>
+
+          <div className="mt-10 sm:mt-14">
+            <EditorialMediaList
+              items={items.map((item, index) => ({
+                label: String(index + 1).padStart(2, "0"),
+                title: item.title,
+                body: item.body,
+                media: item.media,
+              }))}
+            />
+          </div>
+        </Container>
+      </section>
+    );
+  }
+
+  // Empresas: tres bloques editoriales alternados a ancho completo, sin cajas.
   return (
     <section className="bg-background py-16 sm:py-24 lg:py-28">
       <Container>
         <AnimatedIn>
-          <h2 className="max-w-lg font-serif text-3xl text-text sm:text-4xl">
-            {door.featuresTitle || copy.featureSectionsHeading}
-          </h2>
+          <h2 className="max-w-lg font-serif text-3xl text-text sm:text-4xl">{heading}</h2>
         </AnimatedIn>
-
-        <div className="mt-10 grid grid-cols-1 gap-5 sm:mt-14 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
-          {items.map((item, index) => (
-            <AnimatedIn
-              key={item.title}
-              delay={index * 0.08}
-              className={cn(
-                "flex flex-col overflow-hidden rounded-card bg-surface",
-                index === 0 ? "sm:col-span-2 lg:col-span-2 lg:row-span-2" : ""
-              )}
-            >
-              {item.media ? (
-                <div className={cn("relative w-full", index === 0 ? "aspect-[16/10] lg:aspect-[16/9]" : "aspect-[4/3]")}>
-                  <Media media={item.media} alt={item.title} sizes="(min-width: 1024px) 45vw, 100vw" />
-                </div>
-              ) : null}
-              <div className="flex flex-1 flex-col gap-2 p-6 sm:p-7">
-                <h3 className="font-serif text-xl text-text sm:text-2xl">{item.title}</h3>
-                {item.body ? <p className="font-sans text-sm leading-relaxed text-muted sm:text-base">{item.body}</p> : null}
-              </div>
-            </AnimatedIn>
-          ))}
-        </div>
       </Container>
+
+      <div className="mt-10 flex flex-col gap-16 sm:mt-14 sm:gap-24 lg:gap-28">
+        {items.map((item, index) => {
+          const imageFirst = index % 2 === 1;
+          return (
+            <Container key={item.title}>
+              <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1fr_1.2fr] lg:gap-14">
+                <AnimatedIn
+                  className={cn("flex flex-col gap-4", imageFirst ? "lg:order-2" : "lg:order-1")}
+                  delay={0.05}
+                >
+                  <span className="font-sans text-xs tracking-[0.15em] text-olive">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="font-serif text-3xl text-text sm:text-4xl">{item.title}</h3>
+                  {item.body ? (
+                    <p className="max-w-sm font-sans text-base leading-relaxed text-muted">{item.body}</p>
+                  ) : null}
+                </AnimatedIn>
+
+                {item.media ? (
+                  <AnimatedIn
+                    className={cn(
+                      "relative aspect-[4/3] w-full overflow-hidden sm:aspect-[16/10] lg:h-[480px] lg:aspect-auto",
+                      imageFirst ? "lg:order-1" : "lg:order-2"
+                    )}
+                  >
+                    <Media media={item.media} alt={item.title} sizes="(min-width: 1024px) 55vw, 100vw" />
+                  </AnimatedIn>
+                ) : null}
+              </div>
+            </Container>
+          );
+        })}
+      </div>
     </section>
   );
 }

@@ -21,7 +21,7 @@ type DoorPageCopy = {
   featureSectionsHeading: string;
   featureItemsFallback: { title: string; body: string }[];
   timeline: { title: string; items: { time: string; title: string; body?: string }[] };
-  spaces: { title: string };
+  spaces: { title: string; itemsFallback: string[] };
   plasty: { heading: string; body: string; ctaLabel: string };
   finalCta: { headline: string; body: string; ctaLabel: string };
   related: { doorId: DoorId; note: string }[];
@@ -51,7 +51,7 @@ export const DOOR_PAGE_COPY: Record<"empresas" | "eventos", DoorPageCopy> = {
         { time: "16:00", title: "Actividad / pickleball" },
       ],
     },
-    spaces: { title: "Espacios" },
+    spaces: { title: "Espacios", itemsFallback: ["Interior", "Terraza", "Jardín", "Comedor", "Piscina", "Pickleball"] },
     plasty: {
       heading: "Vuestra jornada también genera impacto.",
       body: "Cada jornada de empresa está vinculada a la financiación de la recuperación de 30 kg de plástico.",
@@ -92,7 +92,7 @@ export const DOOR_PAGE_COPY: Record<"empresas" | "eventos", DoorPageCopy> = {
         { time: "Barbacoa", title: "Comida al aire libre" },
       ],
     },
-    spaces: { title: "Un evento, diferentes espacios" },
+    spaces: { title: "Un evento, diferentes espacios", itemsFallback: ["Interior", "Terraza", "Jardín", "Piscina", "Barbacoa"] },
     plasty: {
       heading: "Vuestra celebración también genera impacto.",
       body: "Cada evento reservado está vinculado a la financiación de la recuperación de 70 kg de plástico.",
