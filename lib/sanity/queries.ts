@@ -389,6 +389,7 @@ export const formFieldsProjection = `{
   successText,
   submitLabel,
   "questions": questions[] ${formQuestionProjection},
+  "steps": steps[]{ step, title },
   "seo": seo ${seoProjection}
 }`;
 

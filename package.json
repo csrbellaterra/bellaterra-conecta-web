@@ -18,7 +18,10 @@
     "sanity:backfill-door-copy": "tsx scripts/backfill-door-copy.ts",
     "sanity:disable-pickleball-plasty": "tsx scripts/disable-pickleball-plasty.ts",
     "sanity:populate-gallery-from-doors": "tsx scripts/populate-gallery-from-doors.ts",
-    "sanity:ensure-contact-intents": "tsx scripts/ensure-contact-intents.ts"
+    "sanity:ensure-contact-intents": "tsx scripts/ensure-contact-intents.ts",
+    "sanity:backfill-form-questions": "tsx scripts/backfill-form-questions.ts",
+    "sanity:align-forms-v2": "tsx scripts/align-forms-v2.ts",
+    "airtable:check": "tsx scripts/airtable-check.ts"
   },
   "dependencies": {
     "next": "14.2.15",

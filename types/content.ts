@@ -442,7 +442,7 @@ export type FormQuestionType =
 
 export type FormQuestionConditionalLogic = {
   dependsOnQuestionId?: string;
-  condition?: "equals" | "notEquals";
+  condition?: "equals" | "notEquals" | "contains";
   value?: string;
 };
 
@@ -460,6 +460,12 @@ export type FormQuestion = {
   conditionalLogic?: FormQuestionConditionalLogic;
 };
 
+/** Título editable por número de paso (form.steps en Sanity), ej. {step:1, title:"Sobre ti"}. */
+export type FormStep = {
+  step: number;
+  title: string;
+};
+
 export type FormDoc = {
   slug: string;
   title: string;
@@ -471,6 +477,8 @@ export type FormDoc = {
   successText?: string;
   submitLabel: string;
   questions: FormQuestion[];
+  /** ---------- Fase 6 (aditivo, opcional) ---------- */
+  steps?: FormStep[];
   seo?: SeoFields;
 };
 

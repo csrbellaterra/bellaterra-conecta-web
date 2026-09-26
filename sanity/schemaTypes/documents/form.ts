@@ -52,6 +52,25 @@ export default defineType({
       validation: (Rule) => Rule.required().min(1),
       group: "questions",
     }),
+    defineField({
+      name: "steps",
+      title: "Títulos de los pasos (opcional)",
+      description:
+        "Si el formulario agrupa preguntas por 'Paso' (ver campo Paso de cada pregunta), aquí puedes poner un título por cada número de paso (ej. Paso 1 → 'Sobre ti'). Si un paso no tiene título aquí, se muestra solo 'Paso N de M'.",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          name: "formStep",
+          fields: [
+            defineField({ name: "step", title: "Número de paso", type: "number", validation: (Rule) => Rule.required() }),
+            defineField({ name: "title", title: "Título del paso", type: "string", validation: (Rule) => Rule.required() }),
+          ],
+          preview: { select: { title: "title", subtitle: "step" } },
+        },
+      ],
+      group: "questions",
+    }),
     defineField({ name: "seo", title: "SEO", type: "seoFields", group: "seo" }),
   ],
   preview: {

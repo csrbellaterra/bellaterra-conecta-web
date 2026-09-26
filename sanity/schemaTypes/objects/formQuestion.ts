@@ -82,7 +82,13 @@ export default defineType({
           name: "condition",
           title: "Condición",
           type: "string",
-          options: { list: [{ title: "Es igual a", value: "equals" }, { title: "No es igual a", value: "notEquals" }] },
+          options: {
+            list: [
+              { title: "Es igual a", value: "equals" },
+              { title: "No es igual a", value: "notEquals" },
+              { title: "Contiene", value: "contains" },
+            ],
+          },
           initialValue: "equals",
         }),
         defineField({ name: "value", title: "Valor a comparar", type: "string" }),
