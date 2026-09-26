@@ -4,7 +4,7 @@ import { DOOR_IDS } from "@/lib/content";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["", "/la-finca", "/contacto", "/impacto"];
+  const staticRoutes = ["", "/nuestra-historia", "/contacto", "/impacto"];
   const doorRoutes = DOOR_IDS.map((id) => `/${id}`);
 
   return [...staticRoutes, ...doorRoutes].map((route) => ({

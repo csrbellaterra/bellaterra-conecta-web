@@ -222,12 +222,54 @@ export type HomePage = {
   finalCtaUrl?: string;
 };
 
+/** Aportación real de una puerta dentro de /impacto (distinto de door.plastyContributionText). */
+export type DoorImpactItem = {
+  door: DoorId;
+  doorName: string;
+  enabled: boolean;
+  contributionText?: string;
+  contributions?: number;
+  kg?: number;
+  percentage?: number;
+};
+
 export type ImpactSettings = {
   impactEnabled: boolean;
   impactKg?: number;
   impactUpdatedAt?: string;
   impactMethodology?: string;
   impactMethodologyUrl?: string;
+  /** ---------- Fase 5 (aditivo, opcional) ---------- */
+  heroEyebrow?: string;
+  heroHeadline?: string;
+  heroBody?: string;
+  heroMedia?: Media;
+  totalContributions?: number;
+  annualTargetEnabled?: boolean;
+  annualTarget?: number;
+  doorImpact?: DoorImpactItem[];
+  hallOfFameEnabled?: boolean;
+  finalCtaHeadline?: string;
+  finalCtaBody?: string;
+  finalCtaLabel?: string;
+  finalCtaUrl?: string;
+};
+
+/** Futuro "Hall of Fame" (Fase 5: solo arquitectura de datos + UI mínima). */
+export type ImpactContributorType = "person" | "company" | "event" | "community";
+
+export type ImpactContributor = {
+  name: string;
+  slug?: string;
+  type: ImpactContributorType;
+  image?: SanityImage;
+  logo?: SanityImage;
+  shortDescription?: string;
+  kgAssociated?: number;
+  date?: string;
+  relatedDoor?: DoorId;
+  featured: boolean;
+  order?: number;
 };
 
 /**
@@ -260,6 +302,34 @@ export type StoryPage = {
   finalCtaForm?: string;
   finalCtaUrl?: string;
   seo: SeoFields;
+};
+
+/**
+ * /contacto (Fase 5, corrección posterior) — documento único, mismo
+ * patrón que StoryPage: el diseño del router de intención vive en
+ * código (components/sections/contacto/*), Sanity controla el copy
+ * del hero, las opciones del router (`intents`) y los datos de
+ * contacto secundarios. Ver sanity/schemaTypes/documents/contactPage.ts.
+ */
+export type ContactIntent = {
+  id: string;
+  title: string;
+  description?: string;
+  url: string;
+  order: number;
+  enabled: boolean;
+  icon?: string;
+};
+
+export type ContactPage = {
+  heroEyebrow?: string;
+  heroHeadline?: string;
+  heroBody?: string;
+  intents?: ContactIntent[];
+  locationText?: string;
+  email?: string;
+  instagramUrl?: string;
+  mapsUrl?: string;
 };
 
 export type NavLink = {

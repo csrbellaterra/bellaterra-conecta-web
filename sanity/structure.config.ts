@@ -1,4 +1,4 @@
-import { BookIcon, CalendarIcon, CogIcon, EnvelopeIcon, HomeIcon, ImagesIcon } from "@sanity/icons";
+import { BookIcon, CalendarIcon, CogIcon, EnvelopeIcon, HomeIcon, ImagesIcon, StarIcon } from "@sanity/icons";
 import type { StructureResolver } from "sanity/structure";
 
 /**
@@ -36,6 +36,10 @@ export const structure: StructureResolver = (S) =>
         .title("Nuestra Historia")
         .icon(BookIcon)
         .child(S.document().schemaType("storyPage").documentId("storyPage")),
+      S.listItem()
+        .title("Contacto")
+        .icon(EnvelopeIcon)
+        .child(S.document().schemaType("contactPage").documentId("contactPage")),
       S.divider(),
       S.listItem()
         .title("Eventos (Family Days)")
@@ -53,4 +57,8 @@ export const structure: StructureResolver = (S) =>
       S.listItem()
         .title("Impacto (PLASTY)")
         .child(S.document().schemaType("impact").documentId("impact")),
+      S.listItem()
+        .title("Comunidad que contribuye (Hall of Fame)")
+        .icon(StarIcon)
+        .child(S.documentTypeList("impactContributor").title("Comunidad que contribuye")),
     ]);

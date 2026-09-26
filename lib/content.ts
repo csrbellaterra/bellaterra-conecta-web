@@ -2,11 +2,13 @@ import { isSanityConfigured } from "@/lib/sanity/env";
 import { getClient } from "@/lib/sanity/client";
 import {
   allDoorsQuery,
+  contactPageQuery,
   doorBySlugQuery,
   eventBySlugQuery,
   formBySlugQuery,
   galleryItemsQuery,
   homePageQuery,
+  impactContributorsQuery,
   impactSettingsQuery,
   pageBySlugQuery,
   siteSettingsQuery,
@@ -14,6 +16,7 @@ import {
   upcomingEventsQuery,
 } from "@/lib/sanity/queries";
 import {
+  contactPage as seedContactPage,
   doors as seedDoors,
   getDoorBySlug as getSeedDoorBySlug,
   homePage as seedHomePage,
@@ -23,6 +26,7 @@ import {
   storyPage as seedStoryPage,
 } from "@/lib/sanity/seed-data";
 import type {
+  ContactPage,
   Door,
   DoorId,
   Event,
@@ -30,6 +34,7 @@ import type {
   GalleryCategory,
   GalleryItem,
   HomePage,
+  ImpactContributor,
   ImpactSettings,
   Page,
   SiteSettings,
@@ -99,6 +104,21 @@ export async function getStoryPage(preview = false): Promise<StoryPage> {
   return data ?? seedStoryPage;
 }
 
+/**
+ * /contacto (Fase 5, corrección posterior) — documento único, ver
+ * types/content.ts → ContactPage. Prioridad Sanity → fallback: si el
+ * documento existe pero todavía no tiene `intents` cargados, el
+ * fallback de seed-data.ts (a su vez basado en
+ * lib/contactCopy.ts) sigue resolviendo el router — ver
+ * ContactIntentRouter, que aplica esa cadena de prioridad campo a
+ * campo, no documento a documento.
+ */
+export async function getContactPage(preview = false): Promise<ContactPage> {
+  if (!isSanityConfigured) return seedContactPage;
+  const data = await fetchSanity<ContactPage>(contactPageQuery, {}, preview);
+  return data ?? seedContactPage;
+}
+
 export async function getPage(slug: string, preview = false): Promise<Page | undefined> {
   if (!isSanityConfigured) return seedStaticPages[slug];
   const data = await fetchSanity<Page>(pageBySlugQuery, { slug }, preview);
@@ -140,5 +160,18 @@ export async function getForm(slug: string, preview = false): Promise<FormDoc | 
 export async function getGalleryItems(category?: GalleryCategory, preview = false): Promise<GalleryItem[]> {
   if (!isSanityConfigured) return [];
   const data = await fetchSanity<GalleryItem[]>(galleryItemsQuery, { category: category ?? null }, preview);
+  return data ?? [];
+}
+
+/**
+ * "Comunidad que contribuye" (Hall of Fame, Fase 5) para /impacto. Solo
+ * devuelve contributors con publicationConsent = true (filtrado ya en
+ * la propia consulta GROQ, ver impactContributorsQuery). Sin Sanity
+ * configurado no hay datos de respaldo: se devuelve una lista vacía,
+ * igual que el resto de contenido V2 sin seed.
+ */
+export async function getImpactContributors(preview = false): Promise<ImpactContributor[]> {
+  if (!isSanityConfigured) return [];
+  const data = await fetchSanity<ImpactContributor[]>(impactContributorsQuery, {}, preview);
   return data ?? [];
 }

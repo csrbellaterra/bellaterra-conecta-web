@@ -12,22 +12,18 @@ const nextConfig = {
     // El linteo se ejecuta aparte con `pnpm lint`; no bloquea el build.
     ignoreDuringBuilds: false,
   },
-  // V2 — Fase 4B: /nuestra-historia ya existe como página funcional,
-  // pero el redirect /la-finca -> /nuestra-historia sigue
-  // DELIBERADAMENTE desactivado hasta que llegue una instrucción
-  // explícita de activarlo. /la-finca sigue funcionando con su
-  // contenido actual (documento `page`, sin tocar) mientras tanto.
-  // Para reactivar, descomentar el bloque redirects() de abajo:
-  //
-  // async redirects() {
-  //   return [
-  //     {
-  //       source: "/la-finca",
-  //       destination: "/nuestra-historia",
-  //       permanent: true,
-  //     },
-  //   ];
-  // },
+  // V2: /nuestra-historia ya existe como página funcional (Fase 4B,
+  // StoryPageTemplate) y verificada — /la-finca (documento `page`
+  // antiguo, sin tocar) redirige de forma permanente a la nueva URL.
+  async redirects() {
+    return [
+      {
+        source: "/la-finca",
+        destination: "/nuestra-historia",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

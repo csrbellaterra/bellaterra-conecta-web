@@ -35,11 +35,13 @@ import door from "./documents/door";
 import page from "./documents/page";
 import impact from "./documents/impact";
 import storyPage from "./documents/storyPage";
+import contactPage from "./documents/contactPage";
 
 // Documentos V2
 import event from "./documents/event";
 import form from "./documents/form";
 import galleryItem from "./documents/galleryItem";
+import impactContributor from "./documents/impactContributor";
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   // Documentos
@@ -49,10 +51,12 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   page,
   impact,
   storyPage,
+  contactPage,
   // Documentos V2
   event,
   form,
   galleryItem,
+  impactContributor,
   // Bloques
   heroSection,
   doorSelectorSection,

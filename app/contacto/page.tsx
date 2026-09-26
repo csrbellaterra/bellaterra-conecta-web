@@ -1,64 +1,44 @@
 import type { Metadata } from "next";
 import { draftMode } from "next/headers";
-import { getPage, getSiteSettings } from "@/lib/content";
+import { getContactPage, getPage, getSiteSettings } from "@/lib/content";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import Container from "@/components/ui/Container";
-import AnimatedIn from "@/components/ui/AnimatedIn";
+import ContactIntentRouter from "@/components/sections/contacto/ContactIntentRouter";
+import ContactDetails from "@/components/sections/contacto/ContactDetails";
+import { CONTACT_HERO_HEADLINE } from "@/lib/contactCopy";
 
 export async function generateMetadata(): Promise<Metadata> {
   const page = await getPage("contacto");
   return {
-    title: page?.seo.title ?? "Contacto",
-    description: page?.seo.description,
+    title: page?.seo.title ?? "Contacto — Bellaterra Conecta",
+    description: page?.seo.description ?? CONTACT_HERO_HEADLINE,
   };
 }
 
 /**
- * Página de contacto. Deliberadamente sin formulario que "envíe a
- * ningún sitio": mientras no haya un servicio de envío de correo
- * conectado (ver README.md, sección "Añadir un formulario real"),
- * mostramos los canales de contacto directos (email, Instagram,
- * dirección) para no simular una funcionalidad que no existe.
+ * /contacto (Fase 5) — router de intención: opciones grandes llevan
+ * directamente al formulario de /solicitud/[slug] que corresponde, en
+ * vez de un formulario genérico de nombre/email/mensaje. Copy y
+ * opciones editables desde Sanity (documento `contactPage`, ver
+ * lib/content.ts → getContactPage), con fallback a
+ * lib/contactCopy.ts. Los datos de contacto directos (email,
+ * Instagram, dirección, mapa) quedan como bloque secundario, no como
+ * protagonista (ver ContactDetails).
  */
 export default async function ContactoPage() {
   const { isEnabled: preview } = draftMode();
-  const [page, settings] = await Promise.all([getPage("contacto", preview), getSiteSettings(preview)]);
+  const [page, settings, contact] = await Promise.all([
+    getPage("contacto", preview),
+    getSiteSettings(preview),
+    getContactPage(preview),
+  ]);
 
   return (
     <>
       <Header variant="solid" />
-      <main className="min-h-[60vh] pb-24 pt-32 sm:pt-40">
-        <Container>
-          <AnimatedIn className="mx-auto flex max-w-2xl flex-col gap-6 text-center">
-            <h1 className="font-serif text-4xl text-text sm:text-5xl">{page?.title ?? "Contacto"}</h1>
-            <p className="font-sans text-lg text-muted">
-              Cuéntanos qué puerta te interesa y te contestamos lo antes posible.
-            </p>
-
-            <div className="mx-auto mt-6 flex flex-col items-center gap-4">
-              {settings.email ? (
-                <a
-                  href={`mailto:${settings.email}`}
-                  className="inline-flex items-center gap-2 rounded-pill bg-olive px-7 py-3 font-sans text-sm font-medium tracking-wide text-white transition-colors hover:bg-olive-dark"
-                >
-                  {settings.email}
-                </a>
-              ) : null}
-              {settings.instagramUrl ? (
-                <a
-                  href={settings.instagramUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-sans text-sm text-muted underline underline-offset-4 hover:text-text"
-                >
-                  Síguenos en Instagram
-                </a>
-              ) : null}
-              {settings.address ? <p className="font-sans text-sm text-muted">{settings.address}</p> : null}
-            </div>
-          </AnimatedIn>
-        </Container>
+      <main>
+        <ContactIntentRouter contact={contact} legacyTitle={page?.title} />
+        <ContactDetails contact={contact} settings={settings} />
       </main>
       <Footer />
     </>

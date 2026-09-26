@@ -209,7 +209,44 @@ export const impactSettingsQuery = `
     impactKg,
     impactUpdatedAt,
     impactMethodology,
-    impactMethodologyUrl
+    impactMethodologyUrl,
+    heroEyebrow,
+    heroHeadline,
+    heroBody,
+    "heroMedia": heroMedia ${media2Projection},
+    totalContributions,
+    annualTargetEnabled,
+    annualTarget,
+    "doorImpact": doorImpact[]{
+      "door": door->slug.current,
+      "doorName": door->name,
+      enabled,
+      contributionText,
+      contributions,
+      kg,
+      percentage
+    },
+    hallOfFameEnabled,
+    finalCtaHeadline,
+    finalCtaBody,
+    finalCtaLabel,
+    finalCtaUrl
+  }
+`;
+
+export const impactContributorsQuery = `
+  *[_type == "impactContributor" && publicationConsent == true] | order(order asc){
+    name,
+    "slug": slug.current,
+    type,
+    "image": image ${imageProjection},
+    "logo": logo ${imageProjection},
+    shortDescription,
+    kgAssociated,
+    date,
+    "relatedDoor": relatedDoor->slug.current,
+    featured,
+    order
   }
 `;
 
@@ -267,6 +304,27 @@ export const storyPageQuery = `
     "finalCtaForm": finalCtaForm->slug.current,
     finalCtaUrl,
     "seo": seo ${seoProjection}
+  }
+`;
+
+export const contactPageQuery = `
+  *[_type == "contactPage"][0]{
+    heroEyebrow,
+    heroHeadline,
+    heroBody,
+    "intents": intents[] | order(order asc){
+      id,
+      title,
+      description,
+      url,
+      order,
+      enabled,
+      icon
+    },
+    locationText,
+    email,
+    instagramUrl,
+    mapsUrl
   }
 `;
 

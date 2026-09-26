@@ -1,12 +1,15 @@
 import type {
+  ContactPage,
   Door,
   DoorId,
+  DoorImpactItem,
   HomePage,
   ImpactSettings,
   Page,
   SiteSettings,
   StoryPage,
 } from "@/types/content";
+import { CONTACT_HERO_HEADLINE, CONTACT_INTENT_OPTIONS } from "@/lib/contactCopy";
 
 /**
  * DATOS LOCALES DE RESPALDO
@@ -68,6 +71,7 @@ export const siteSettings: SiteSettings = {
     { label: "Comunidad", url: "/comunidad" },
     { label: "Pickleball", url: "/pickleball" },
     { label: "Impacto", url: "/impacto" },
+    { label: "Galería", url: "/galeria" },
   ],
   legalLinks: [
     { label: "Aviso legal", url: "/legal/aviso-legal" },
@@ -82,13 +86,71 @@ export const siteSettings: SiteSettings = {
  * "tabla maestra de impacto" consolidada (está listada como pendiente
  * en el propio documento). No mostrar ningún kg total hasta que
  * impactEnabled pase a true con un dato real y su metodología.
+ *
+ * Los campos nuevos de Fase 5 (hero, doorImpact, finalCta) sí tienen
+ * fallback de contenido, porque son copy editorial de referencia, no
+ * cifras acumuladas calculadas: `contributionText` reproduce el mismo
+ * texto de referencia por puerta que ya vive en doorCopy.ts /
+ * plastyContribution (política de contenido en CLAUDE.md — "Content
+ * policy — PLASTY / Impacto"). `contributions`, `kg` y `percentage` sí
+ * se dejan `undefined`: son datos agregados reales que aún no existen,
+ * y los componentes de /impacto deben ocultarlos en vez de mostrar 0.
+ * Pickleball no lleva contributionText: sin escuela ni PLASTY de
+ * escuela, todavía no hay cifra que mostrar (`enabled: false`).
  */
+const doorImpactFallback: DoorImpactItem[] = [
+  {
+    door: "eventos",
+    doorName: "Eventos",
+    enabled: true,
+    contributionText: "Cada evento reservado está vinculado a la financiación de la recuperación de 70 kg de plástico.",
+  },
+  {
+    door: "empresas",
+    doorName: "Empresas",
+    enabled: true,
+    contributionText: "Cada jornada o experiencia de empresa está vinculada a la financiación de la recuperación de 30 kg de plástico.",
+  },
+  {
+    door: "estancias",
+    doorName: "Estancias",
+    enabled: true,
+    contributionText:
+      "Cada noche en habitación individual o Airbnb está vinculada a la financiación de la recuperación de 2 kg de plástico. El alquiler de la casa completa está vinculado a 30 kg por experiencia.",
+  },
+  {
+    door: "comunidad",
+    doorName: "Comunidad",
+    enabled: true,
+    contributionText: "Cada vinculación anual a la Comunidad está vinculada a la financiación de la recuperación de 70 kg de plástico.",
+  },
+  {
+    door: "pickleball",
+    doorName: "Pickleball",
+    enabled: false,
+  },
+];
+
 export const impactSettings: ImpactSettings = {
   impactEnabled: false,
   impactKg: undefined,
   impactUpdatedAt: undefined,
   impactMethodology: undefined,
   impactMethodologyUrl: undefined,
+  heroEyebrow: "NUESTRO IMPACTO",
+  heroHeadline: "Lo que ocurre aquí\ntambién deja huella fuera.",
+  heroBody:
+    "PLASTY es la herramienta que transforma cada experiencia en Bellaterra Conecta en la financiación de la recuperación de plástico. El modelo se sigue afinando: aquí mostramos cómo funciona, no una cifra cerrada.",
+  heroMedia: { mediaType: "image", image: img("/images/general/general-2.jpg", "Vista de la finca de Bellaterra Conecta") },
+  totalContributions: undefined,
+  annualTargetEnabled: false,
+  annualTarget: undefined,
+  doorImpact: doorImpactFallback,
+  hallOfFameEnabled: false,
+  finalCtaHeadline: "Todo empieza con una experiencia.",
+  finalCtaBody: "Descubre las diferentes formas de vivir Bellaterra Conecta.",
+  finalCtaLabel: "DESCUBRE LAS EXPERIENCIAS",
+  finalCtaUrl: "/#selector",
 };
 
 const doorMeta: Record<
@@ -377,6 +439,20 @@ export const storyPage: StoryPage = {
     title: "Nuestra Historia — Bellaterra Conecta",
     description: "Una finca familiar construida en 1967, hoy abierta a nuevas experiencias. De dónde venimos y hacia dónde vamos.",
   },
+};
+
+/**
+ * Fallback de /contacto (Fase 5, corrección posterior). Reutiliza
+ * lib/contactCopy.ts para no duplicar las 7 opciones del router en
+ * dos sitios distintos — este objeto es solo lo que se sirve cuando
+ * Sanity no está configurado (ver lib/content.ts → getContactPage).
+ * email/instagramUrl/locationText se dejan sin definir a propósito:
+ * ContactDetails ya sabe usar siteSettings.email/instagramUrl/address
+ * como respaldo cuando contactPage no los define.
+ */
+export const contactPage: ContactPage = {
+  heroHeadline: CONTACT_HERO_HEADLINE,
+  intents: CONTACT_INTENT_OPTIONS,
 };
 
 export const staticPages: Record<string, Page> = {
