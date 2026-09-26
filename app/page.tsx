@@ -65,9 +65,14 @@ export default async function HomePage() {
           <HomeExperienceSection key={door.id} door={door} index={index} />
         ))}
 
-        <section className="bg-surface py-20 sm:py-28">
+        {/*
+          Bloque "Conexión" (sección 11): pausa visual entre las cinco
+          experiencias y PLASTY — media amplia protagonista, nunca un
+          recorte pequeño, para que sienta que conecta ambos bloques.
+        */}
+        <section className="bg-surface py-16 sm:py-24 lg:py-28">
           <Container className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
-            <AnimatedIn className="relative aspect-[4/3] w-full overflow-hidden rounded-card lg:order-2">
+            <AnimatedIn className="relative aspect-[4/3] w-full overflow-hidden rounded-card sm:aspect-[16/11] lg:order-2 lg:aspect-[4/3] lg:h-[480px]">
               <Media media={home.connectionSection.media} alt="Vista aérea de la finca" />
             </AnimatedIn>
             <AnimatedIn className="lg:order-1" delay={0.1}>
@@ -76,7 +81,7 @@ export default async function HomePage() {
                   {connectionEyebrow}
                 </span>
               ) : null}
-              <h2 className="whitespace-pre-line font-serif text-3xl leading-tight text-text sm:text-4xl">
+              <h2 className="whitespace-pre-line font-serif text-3xl leading-tight text-text sm:text-4xl lg:text-[2.5rem]">
                 {connectionHeadline}
               </h2>
             </AnimatedIn>

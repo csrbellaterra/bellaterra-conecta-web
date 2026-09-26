@@ -26,24 +26,21 @@ export default function PlastySection({ home, impact }: { home: HomePage; impact
   const ctaUrl = home.plastyCtaUrl || home.impactSection?.ctaUrl || HOME_PLASTY_COPY.ctaUrl;
 
   return (
-    <section className="bg-olive-dark py-20 text-white sm:py-28">
-      <Container className="flex flex-col items-center gap-6 text-center">
+    <section className="bg-olive-dark py-16 text-white sm:py-24 lg:py-28">
+      <Container className="flex flex-col items-center gap-7 text-center">
         <AnimatedIn className="flex flex-col items-center gap-4">
           <span className="font-sans text-xs uppercase tracking-[0.3em] text-white/70">{eyebrow}</span>
-          <h2 className="font-serif text-3xl sm:text-4xl">{heading}</h2>
+          <h2 className="font-serif text-3xl sm:text-4xl lg:text-[2.5rem]">{heading}</h2>
           {impact.impactEnabled && typeof impact.impactKg === "number" ? (
             <p className="font-serif text-5xl sm:text-6xl">
               <CountUp value={impact.impactKg} suffix=" kg" />
             </p>
           ) : (
-            <p className="max-w-xl font-sans text-base text-white/80">{body}</p>
+            <p className="max-w-xl font-sans text-base leading-relaxed text-white/80">{body}</p>
           )}
         </AnimatedIn>
 
-        <Link
-          href={ctaUrl}
-          className="mt-2 inline-flex items-center gap-2 rounded-pill border border-white/30 px-6 py-3 font-sans text-sm tracking-wide transition-colors hover:bg-white hover:text-olive-dark"
-        >
+        <Link href={ctaUrl} className="btn-secondary mt-1">
           {ctaLabel} <span aria-hidden>→</span>
         </Link>
       </Container>

@@ -21,14 +21,21 @@ export default function HeroSection({ block, priority = true }: { block: HeroBlo
   const titleLines = splitTitleLines(block.title);
 
   return (
-    <section className="relative flex h-[100svh] min-h-[560px] w-full items-end overflow-hidden bg-ink">
+    <section className="relative flex h-[100svh] min-h-[600px] w-full items-end overflow-hidden bg-ink">
       <div className="absolute inset-0">
-        <Media media={block.media} alt={block.title} priority={priority} className="scale-[1.02] brightness-[0.8]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/15 to-ink/35" />
+        {/*
+          La foto/vídeo debe sentirse protagonista (sección 5): se
+          reduce el oscurecimiento respecto a la versión anterior
+          (brightness-[0.8] → 0.9, gradiente más corto y más claro) —
+          justo lo necesario para que el texto siga siendo legible
+          sobre cualquier fotografía, sin lavar la imagen entera.
+        */}
+        <Media media={block.media} alt={block.title} priority={priority} className="scale-[1.02] brightness-[0.92]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/60 via-ink/5 to-transparent" />
       </div>
 
-      <div className="relative z-10 w-full pb-20 pt-32 sm:pb-28">
-        <div className="mx-auto flex w-full max-w-content flex-col gap-5 px-5 sm:px-8 lg:px-12">
+      <div className="relative z-10 w-full pb-24 pt-32 sm:pb-28 lg:pb-32">
+        <div className="mx-auto flex w-full max-w-content flex-col gap-6 px-5 sm:px-8 lg:px-12">
           {block.eyebrow ? (
             <HeroReveal delay={0}>
               <span className="font-sans text-xs uppercase tracking-[0.35em] text-white/75">{block.eyebrow}</span>
@@ -36,9 +43,9 @@ export default function HeroSection({ block, priority = true }: { block: HeroBlo
           ) : null}
 
           <HeroReveal delay={0.1}>
-            <h1 className="max-w-3xl font-serif text-5xl leading-[1.05] text-white sm:text-7xl lg:text-[5.5rem]">
+            <h1 className="max-w-4xl font-serif text-[3.25rem] leading-[1.05] text-white sm:text-7xl lg:text-[5.75rem]">
               {titleLines.map((line, i) => (
-                <span key={i} className="block">
+                <span key={i} className="block drop-shadow-[0_2px_16px_rgba(20,19,15,0.35)]">
                   {line}
                 </span>
               ))}

@@ -33,28 +33,25 @@ export default function HomeExperienceSection({ door, index }: { door: Door; ind
   const imageFirst = index % 2 === 0;
 
   return (
-    <section className="bg-background py-16 sm:py-24 lg:py-28">
+    <section className="bg-background py-14 sm:py-20 lg:py-24">
       <Container>
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.15fr_1fr] lg:gap-16">
           <AnimatedIn
             className={cn(
-              "relative aspect-[4/5] w-full overflow-hidden rounded-card sm:aspect-[16/11] lg:aspect-[4/5] lg:h-[560px]",
+              "relative aspect-[4/5] w-full overflow-hidden rounded-card sm:aspect-[16/11] lg:aspect-[4/5] lg:h-[520px]",
               imageFirst ? "lg:order-1" : "lg:order-2"
             )}
           >
             <Media media={media} alt={headline} sizes="(min-width: 1024px) 55vw, 100vw" />
           </AnimatedIn>
 
-          <AnimatedIn className={cn("flex flex-col gap-5", imageFirst ? "lg:order-2" : "lg:order-1")} delay={0.1}>
+          <AnimatedIn className={cn("flex flex-col gap-4", imageFirst ? "lg:order-2" : "lg:order-1")} delay={0.1}>
             <span className="font-sans text-xs uppercase tracking-[0.25em] text-olive">{eyebrow}</span>
             <h2 className="whitespace-pre-line font-serif text-3xl leading-tight text-text sm:text-4xl lg:text-[2.75rem]">
               {headline}
             </h2>
             <p className="max-w-md font-sans text-base leading-relaxed text-muted">{description}</p>
-            <Link
-              href={`/${door.slug}`}
-              className="mt-2 inline-flex w-fit items-center gap-2 font-sans text-sm font-medium text-text underline decoration-olive decoration-2 underline-offset-4 transition-colors hover:text-olive"
-            >
+            <Link href={`/${door.slug}`} className="link-editorial mt-2">
               {ctaLabel} <span aria-hidden>→</span>
             </Link>
           </AnimatedIn>

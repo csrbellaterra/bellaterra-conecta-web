@@ -18,15 +18,15 @@ export default function DoorCard({ door, description }: { door: Door; descriptio
   return (
     <Link
       href={`/${door.slug}`}
-      className="group flex items-center gap-4 border-b border-border py-5 transition-colors last:border-b-0 hover:border-olive/40 sm:gap-6 sm:py-7"
+      className="group flex items-center gap-4 border-b border-border py-6 transition-colors last:border-b-0 hover:border-olive/50 sm:gap-7 sm:py-8 lg:py-9"
     >
-      <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-card bg-surface sm:h-20 sm:w-20">
+      <span className="relative h-16 w-16 shrink-0 overflow-hidden rounded-card bg-surface sm:h-24 sm:w-24 lg:h-28 lg:w-28">
         <Image
           src={door.selectorImage.url}
           alt=""
           fill
-          sizes="80px"
-          className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+          sizes="112px"
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
           style={
             door.selectorImage.hotspot
               ? { objectPosition: `${door.selectorImage.hotspot.x}% ${door.selectorImage.hotspot.y}%` }
@@ -35,22 +35,22 @@ export default function DoorCard({ door, description }: { door: Door; descriptio
         />
       </span>
 
-      <span className="hidden font-sans text-sm tracking-[0.15em] text-muted sm:block sm:w-8">
+      <span className="hidden font-serif text-base italic text-muted/80 transition-colors group-hover:text-olive sm:block sm:w-9">
         {String(door.order).padStart(2, "0")}
       </span>
 
-      <DoorIcon name={door.icon} className="hidden h-6 w-6 shrink-0 text-olive sm:block" />
+      <DoorIcon name={door.icon} className="hidden h-6 w-6 shrink-0 text-olive/80 transition-colors group-hover:text-olive sm:block" />
 
       <span className="min-w-0 flex-1">
-        <span className="block font-serif text-xl text-text transition-colors group-hover:text-olive-dark sm:text-2xl">
+        <span className="block font-serif text-xl text-text transition-colors group-hover:text-olive-dark sm:text-[1.7rem]">
           {door.name}
         </span>
-        <span className="mt-0.5 block truncate font-sans text-sm text-muted sm:whitespace-normal">{description}</span>
+        <span className="mt-1 block truncate font-sans text-sm text-muted sm:whitespace-normal sm:text-base">{description}</span>
       </span>
 
       <span
         aria-hidden
-        className="shrink-0 font-sans text-lg text-muted transition-transform duration-300 ease-out group-hover:translate-x-[3px] group-hover:text-olive"
+        className="shrink-0 font-serif text-xl text-muted transition-transform duration-300 ease-out group-hover:translate-x-1.5 group-hover:text-olive"
       >
         →
       </span>

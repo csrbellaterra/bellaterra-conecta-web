@@ -66,3 +66,28 @@ body {
   outline: 2px solid var(--color-olive-dark);
   outline-offset: 3px;
 }
+
+/* ============================================
+   PATRONES DE BOTÓN/LINK — Fase 7A (sección 15)
+   Máximo 3 patrones en toda la Home: primario (sólido oliva),
+   secundario (outline), editorial (texto + flecha). Cualquier CTA
+   nuevo en Home/Header/Footer debe reutilizar una de estas tres
+   clases en vez de inventar un cuarto estilo.
+   ============================================ */
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center gap-2 rounded-pill bg-olive px-7 py-3 font-sans text-sm font-medium tracking-wide text-white transition-colors duration-300 hover:bg-olive-dark;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 rounded-pill border border-white/30 px-6 py-3 font-sans text-sm tracking-wide text-white transition-colors duration-300 hover:bg-white hover:text-olive-dark;
+  }
+  .btn-secondary-light {
+    @apply inline-flex items-center gap-2 rounded-pill border border-border px-6 py-3 font-sans text-sm tracking-wide text-text transition-colors duration-300 hover:border-olive hover:text-olive-dark;
+  }
+  .link-editorial {
+    @apply inline-flex w-fit items-center gap-2 font-sans text-sm font-medium text-text underline decoration-olive decoration-2 underline-offset-4 transition-colors duration-300 hover:text-olive;
+  }
+  .link-editorial-invert {
+    @apply inline-flex w-fit items-center gap-2 font-sans text-sm font-medium text-white underline decoration-white/60 decoration-2 underline-offset-4 transition-colors duration-300 hover:text-white/80;
+  }
+}

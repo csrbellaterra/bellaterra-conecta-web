@@ -22,18 +22,15 @@ export default function HomeFinalCta({ home }: { home: HomePage }) {
     : home.finalCtaUrl || HOME_FINAL_CTA_COPY.ctaUrl;
 
   return (
-    <section className="bg-surface py-20 sm:py-28">
-      <Container className="flex flex-col items-center gap-4 text-center">
-        <AnimatedIn className="flex flex-col items-center gap-4">
+    <section className="bg-surface py-24 sm:py-32 lg:py-40">
+      <Container className="flex flex-col items-center gap-6 text-center">
+        <AnimatedIn className="flex flex-col items-center gap-6">
           {eyebrow ? (
             <span className="font-sans text-xs uppercase tracking-[0.3em] text-olive">{eyebrow}</span>
           ) : null}
-          <h2 className="max-w-xl font-serif text-3xl text-text sm:text-4xl">{heading}</h2>
-          <p className="font-sans text-base text-muted">{body}</p>
-          <Link
-            href={ctaUrl}
-            className="mt-2 inline-flex items-center gap-2 rounded-pill bg-olive px-7 py-3 font-sans text-sm font-medium tracking-wide text-white transition-colors hover:bg-olive-dark"
-          >
+          <h2 className="max-w-2xl font-serif text-4xl leading-tight text-text sm:text-5xl lg:text-[3.25rem]">{heading}</h2>
+          <p className="max-w-md font-sans text-base leading-relaxed text-muted">{body}</p>
+          <Link href={ctaUrl} className="btn-primary mt-2">
             {ctaLabel} <span aria-hidden>→</span>
           </Link>
         </AnimatedIn>

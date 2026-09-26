@@ -28,16 +28,16 @@ export default function DoorSelectorSection({
   const sorted = [...doors].sort((a, b) => a.order - b.order);
 
   return (
-    <section id="selector" className="bg-background py-20 sm:py-28">
+    <section id="selector" className="bg-background py-16 sm:py-24 lg:py-28">
       <Container>
-        <AnimatedIn className="mx-auto mb-10 max-w-2xl text-center sm:mb-14">
-          <h2 className="font-serif text-3xl text-text sm:text-4xl">{heading || HOME_SELECTOR_COPY.heading}</h2>
+        <AnimatedIn className="mx-auto mb-10 max-w-2xl text-center sm:mb-16">
+          <h2 className="font-serif text-3xl text-text sm:text-4xl lg:text-[2.5rem]">{heading || HOME_SELECTOR_COPY.heading}</h2>
           <p className="mt-4 font-sans text-base leading-relaxed text-muted">
             {introduction || HOME_SELECTOR_COPY.introduction}
           </p>
         </AnimatedIn>
 
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-3xl border-t border-border">
           {sorted.map((door, index) => {
             const description = door.homeEyebrow || HOME_DOOR_COPY[door.id].eyebrow;
             return (
