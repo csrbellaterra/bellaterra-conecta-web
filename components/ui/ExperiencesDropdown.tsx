@@ -4,20 +4,32 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
+/** Retraso antes de cerrar tras salir del trigger/dropdown con el ratón — evita parpadeos al cruzar el pequeño hueco entre ambos. */
+const CLOSE_DELAY_MS = 150;
+
 /**
  * Desplegable "Experiencias" del header de escritorio (Fase 7A,
- * sección 3). Sustituye al patrón CSS-only anterior (group-hover):
- * ese patrón no podía cerrar con Escape ni al hacer click fuera, y el
- * prompt de rediseño lo exige explícitamente. Lista sencilla y
- * elegante, numerada (01 Empresas … 05 Pickleball) — nunca un
- * mega-menu.
+ * secciones 3 y corrección posterior). Lista sencilla y elegante,
+ * numerada (01 Empresas … 05 Pickleball) — nunca un mega-menu.
  *
- * Cierra: al pulsar Escape, al hacer click fuera del propio
- * desplegable, y al navegar (cualquier click en un enlace interno).
- * Accesible por teclado: el botón activador es un <button
- * aria-expanded>, el desplegable es una lista de enlaces reales
- * (Tab/Shift+Tab los recorre en orden del DOM sin necesidad de un
- * roving-tabindex).
+ * Se abre con click (siempre) y, además, con hover — pero SOLO en
+ * dispositivos que de verdad soportan hover con puntero fino
+ * (`(hover: hover) and (pointer: fine)`, comprobado con
+ * `matchMedia`, no con CSS `:hover` a ciegas): en touch, el hover no
+ * hace nada y solo funciona el click/tap, tal como se pidió.
+ *
+ * Cierra: al pulsar Escape, al hacer click fuera, al navegar
+ * (cualquier click en un enlace), al perder el foco por completo
+ * (Tab hacia fuera), y — solo en modo hover — al salir del trigger Y
+ * del propio desplegable, con un pequeño retraso (150ms) para que
+ * cruzar el hueco entre ambos con el ratón no lo cierre de golpe.
+ *
+ * mouseenter/mouseleave se escuchan en el <li> que envuelve trigger +
+ * desplegable: como el panel es un descendiente del <li> (aunque esté
+ * posicionado en absoluto fuera de su caja), moverse del botón al
+ * panel no dispara mouseleave — solo lo dispara salir de verdad hacia
+ * otro elemento de la página, que es cuando programamos el cierre con
+ * retraso.
  */
 export default function ExperiencesDropdown({
   label,
@@ -29,7 +41,20 @@ export default function ExperiencesDropdown({
   showSolidChrome: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const [hoverCapable, setHoverCapable] = useState(false);
   const containerRef = useRef<HTMLLIElement>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Detecta soporte real de hover + puntero fino (no táctil), y se
+  // mantiene al día si el dispositivo cambia de modo (ej. tablet con
+  // ratón conectado/desconectado).
+  useEffect(() => {
+    const query = window.matchMedia("(hover: hover) and (pointer: fine)");
+    setHoverCapable(query.matches);
+    const onChange = (event: MediaQueryListEvent) => setHoverCapable(event.matches);
+    query.addEventListener("change", onChange);
+    return () => query.removeEventListener("change", onChange);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -49,12 +74,50 @@ export default function ExperiencesDropdown({
     };
   }, [open]);
 
+  // Limpieza del temporizador de cierre pendiente si el componente se
+  // desmonta (ej. al navegar) con el cierre todavía en curso.
+  useEffect(() => {
+    return () => {
+      if (closeTimer.current) clearTimeout(closeTimer.current);
+    };
+  }, []);
+
+  function cancelScheduledClose() {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }
+
+  function handleMouseEnter() {
+    if (!hoverCapable) return;
+    cancelScheduledClose();
+    setOpen(true);
+  }
+
+  function handleMouseLeave() {
+    if (!hoverCapable) return;
+    cancelScheduledClose();
+    closeTimer.current = setTimeout(() => setOpen(false), CLOSE_DELAY_MS);
+  }
+
+  function handleBlur(event: React.FocusEvent<HTMLLIElement>) {
+    if (!containerRef.current?.contains(event.relatedTarget as Node)) setOpen(false);
+  }
+
   return (
-    <li ref={containerRef} className="relative">
+    <li
+      ref={containerRef}
+      className="relative"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onBlur={handleBlur}
+    >
       <button
         type="button"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
+        onFocus={() => setOpen(true)}
         className={cn(
           "flex items-center gap-1.5 font-sans text-[13px] uppercase tracking-[0.12em] transition-colors",
           showSolidChrome ? "text-muted hover:text-text" : "text-white/85 hover:text-white"

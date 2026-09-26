@@ -44,7 +44,12 @@ export default function HeaderChrome({
   return (
     <header
       className={cn(
-        "inset-x-0 top-0 z-30 w-full transition-[background-color,box-shadow,color] duration-300",
+        // z-40 (no z-30): debe quedar siempre por encima de cualquier
+        // contenido de página (heroes, media a pantalla completa,
+        // etc.) — el acceso al menú móvil debe estar disponible
+        // durante TODA la navegación, no solo sobre el hero inicial
+        // (Fase 7A, corrección de navegación #2).
+        "inset-x-0 top-0 z-40 w-full transition-[background-color,box-shadow,color] duration-300",
         // Solo el hero a pantalla completa (variant="transparent") usa
         // posición fija con fondo que aparece al hacer scroll — fino y
         // silencioso: una sombra casi imperceptible, nunca un borde

@@ -69,7 +69,10 @@ export default function MobileNav({ dark = false }: { dark?: boolean }) {
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "relative z-50 flex h-10 w-10 flex-col items-center justify-center gap-1.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-olive",
+          // z-[60]: por encima del propio header (z-40) y del panel
+          // fullscreen (z-50) — el botón (que hace de cerrar cuando
+          // open=true) debe seguir siendo visible y pulsable siempre.
+          "relative z-[60] flex h-10 w-10 flex-col items-center justify-center gap-1.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-olive",
           open ? "text-text" : dark ? "text-white" : "text-text"
         )}
       >
@@ -92,7 +95,7 @@ export default function MobileNav({ dark = false }: { dark?: boolean }) {
             animate={{ opacity: 1 }}
             exit={shouldReduceMotion ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-background"
+            className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-background"
           >
             <div className="flex flex-1 flex-col items-center justify-center gap-10 px-6 py-24">
               <nav aria-label="Navegación principal">
