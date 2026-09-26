@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Door } from "@/types/content";
 import Container from "@/components/ui/Container";
 import AnimatedIn from "@/components/ui/AnimatedIn";
-import { DOOR_PAGE_COPY } from "@/lib/doorCopy";
+import { DOOR_PAGE_COPY, type DoorCopyId } from "@/lib/doorCopy";
 
 /**
  * Bloque PLASTY de la página de puerta (V2) — elegante y secundario,
@@ -18,7 +18,7 @@ import { DOOR_PAGE_COPY } from "@/lib/doorCopy";
 export default function DoorPlastyBlock({ door }: { door: Door }) {
   if (door.plastyContributionEnabled === false) return null;
 
-  const copy = DOOR_PAGE_COPY[door.id as "empresas" | "eventos"];
+  const copy = DOOR_PAGE_COPY[door.id as DoorCopyId];
   const body = door.plastyContributionText || copy.plasty.body;
 
   return (

@@ -5,6 +5,7 @@ import type {
   ImpactSettings,
   Page,
   SiteSettings,
+  StoryPage,
 } from "@/types/content";
 
 /**
@@ -335,6 +336,46 @@ export const homePage: HomePage = {
     title: "Bellaterra Conecta — Una finca. Cinco formas de vivirla.",
     description:
       "Finca en Bellaterra, Barcelona, para empresas, eventos, estancias, comunidad y pickleball. Cinco formas de entrar, un mismo lugar al que volver.",
+  },
+};
+
+/**
+ * Fallback de /nuestra-historia (Fase 4B). No hay todavía material
+ * fotográfico histórico real subido — se usan fotos genéricas de la
+ * finca (public/images/general/*) como marcador temporal, igual que
+ * el resto de fallbacks de este archivo.
+ */
+export const storyPage: StoryPage = {
+  heroMedia: { mediaType: "image", image: img("/images/general/aerea-hero.jpg", "Vista aérea de la finca Bellaterra Conecta") },
+  heroEyebrow: "NUESTRA HISTORIA",
+  heroHeadline: "Una finca familiar.\nUna nueva forma de conectar.",
+  heroDetail: "1967 — Bellaterra",
+  originTitle: "De dónde venimos",
+  originBody:
+    "Bellaterra Conecta nace en una finca familiar construida en 1967. Somos la primera generación que ha decidido abrirla a nuevas experiencias y darle un propósito adaptado al presente.",
+  originMedia: { mediaType: "image", image: img("/images/general/general-1.jpg", "La finca de Bellaterra Conecta") },
+  identityBody:
+    "En un mismo lugar conviven deporte, celebraciones, empresa, alojamiento y nuevas conexiones profesionales. Cada experiencia tiene su propia identidad, pero todas forman parte de Bellaterra Conecta.",
+  identityItems: [
+    { _type: "timelineItem", title: "CELEBRAR", media: { mediaType: "image", image: img("/images/eventos/eventos-1.jpg", "Celebración en Bellaterra Conecta") } },
+    { _type: "timelineItem", title: "TRABAJAR", media: { mediaType: "image", image: img("/images/empresas/empresas-1.jpg", "Jornada de empresa en Bellaterra Conecta") } },
+    { _type: "timelineItem", title: "QUEDARSE", media: { mediaType: "image", image: img("/images/estancias/estancias-1.jpg", "Alojamiento en Bellaterra Conecta") } },
+    { _type: "timelineItem", title: "PARTICIPAR", media: { mediaType: "image", image: img("/images/comunidad/comunidad-1.jpg", "Encuentro de la comunidad en Bellaterra Conecta") } },
+    { _type: "timelineItem", title: "JUGAR", media: { mediaType: "image", image: img("/images/pickleball/pickleball-1.jpg", "Pistas de pickleball de Bellaterra Conecta") } },
+  ],
+  statement: "NO ES LA FINCA.\n\nES TODO LO QUE\nOCURRE DENTRO\nDE ELLA.",
+  futureTitle: "Hacia dónde vamos",
+  futureBody:
+    "Queremos que las personas lleguen por una experiencia, descubran otras posibilidades y encuentren motivos para volver. No buscamos crecer únicamente en actividades, sino construir una comunidad alrededor de experiencias que conectan y generan impacto positivo.",
+  futureMedia: { mediaType: "image", image: img("/images/general/general-2.jpg", "Vista de la finca de Bellaterra Conecta") },
+  timelineEnabled: false,
+  finalCtaHeadline: "¿Quieres conocer Bellaterra Conecta?",
+  finalCtaBody: "Ven a descubrir el espacio y cuéntanos qué te gustaría hacer.",
+  finalCtaLabel: "VEN A CONOCERNOS",
+  finalCtaUrl: "/solicitud/general",
+  seo: {
+    title: "Nuestra Historia — Bellaterra Conecta",
+    description: "Una finca familiar construida en 1967, hoy abierta a nuevas experiencias. De dónde venimos y hacia dónde vamos.",
   },
 };
 

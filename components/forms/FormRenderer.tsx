@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 
 import { cn } from "@/lib/utils";
 import type { FormDoc, FormQuestion } from "@/types/content";
@@ -62,6 +62,26 @@ export default function FormRenderer({ form, pageSource }: { form: FormDoc; page
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Preselección desde la URL (ej. un CTA de "Próximos Family Days" que
+  // enlaza a /solicitud/family-day?fecha_family_day=17%20de%20octubre...):
+  // rellena cualquier pregunta cuyo id coincida con un parámetro de la
+  // URL. Genérico para cualquier formulario, no solo Family Day. Se
+  // aplica en un efecto (no en el useState inicial) para no desajustar
+  // el HTML ya renderizado en servidor.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const prefilled: Answers = {};
+    for (const question of form.questions) {
+      const value = params.get(question.id);
+      if (value) prefilled[question.id] = value;
+    }
+    if (Object.keys(prefilled).length > 0) {
+      setAnswers((prev) => ({ ...prefilled, ...prev }));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.questions]);
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [marketingConsent, setMarketingConsent] = useState(false);
   const [honeypot, setHoneypot] = useState("");
@@ -122,6 +142,24 @@ export default function FormRenderer({ form, pageSource }: { form: FormDoc; page
 
     const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
 
+    // Metadata de seguimiento opcional (ej. un CTA de "Próximos Family
+    // Days" que enlaza con ?eventId=...&eventTitle=...&eventDate=..., o
+    // el CTA de Nuestra Historia con ?ctaSource=historia-visita): viaja
+    // como entradas adicionales de answersJson, sin necesidad de crear
+    // preguntas nuevas en el schema del formulario — ver
+    // components/sections/door/DoorUpcomingFamilyDays.tsx y
+    // components/sections/historia/StoryFinalCta.tsx.
+    const EVENT_METADATA_PARAMS: { param: string; label: string }[] = [
+      { param: "eventId", label: "ID del evento (origen)" },
+      { param: "eventTitle", label: "Evento (origen)" },
+      { param: "eventDate", label: "Fecha del evento (origen)" },
+      { param: "ctaSource", label: "Origen del CTA" },
+    ];
+    const eventMetadataAnswers = EVENT_METADATA_PARAMS.map(({ param, label }) => {
+      const value = params?.get(param);
+      return value ? { questionId: param, questionLabel: label, answer: value } : null;
+    }).filter((entry): entry is { questionId: string; questionLabel: string; answer: string } => entry !== null);
+
     try {
       const res = await fetch("/api/forms/submit", {
         method: "POST",
@@ -130,11 +168,14 @@ export default function FormRenderer({ form, pageSource }: { form: FormDoc; page
           formSlug: form.slug,
           formTitle: form.title,
           pageSource: pageSource ?? (typeof window !== "undefined" ? window.location.pathname : undefined),
-          answers: allVisibleQuestions.map((q) => ({
-            questionId: q.id,
-            questionLabel: q.label,
-            answer: answers[q.id] ?? "",
-          })),
+          answers: [
+            ...allVisibleQuestions.map((q) => ({
+              questionId: q.id,
+              questionLabel: q.label,
+              answer: answers[q.id] ?? "",
+            })),
+            ...eventMetadataAnswers,
+          ],
           privacyAccepted,
           marketingConsent,
           utmSource: params?.get("utm_source") ?? undefined,

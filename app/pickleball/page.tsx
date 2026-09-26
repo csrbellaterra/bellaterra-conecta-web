@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { draftMode } from "next/headers";
-import { getDoor } from "@/lib/content";
-import DoorPageTemplate from "@/components/DoorPageTemplate";
+import { getAllDoors, getDoor, getUpcomingEvents } from "@/lib/content";
+import DoorPageTemplatePickleball from "@/components/DoorPageTemplatePickleball";
 
 const DOOR_ID = "pickleball" as const;
 
@@ -17,7 +17,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function PickleballPage() {
   const { isEnabled: preview } = draftMode();
-  const door = await getDoor(DOOR_ID, preview);
+  const [door, allDoors, upcomingFamilyDays] = await Promise.all([
+    getDoor(DOOR_ID, preview),
+    getAllDoors(preview),
+    getUpcomingEvents("familyDay", preview),
+  ]);
   if (!door) notFound();
-  return <DoorPageTemplate door={door} />;
+  return <DoorPageTemplatePickleball door={door} allDoors={allDoors} upcomingFamilyDays={upcomingFamilyDays} />;
 }

@@ -15,7 +15,8 @@
     "sanity:create-forms": "tsx scripts/create-forms.ts",
     "sanity:create-family-days": "tsx scripts/create-family-days.ts",
     "sanity:backfill-home-copy": "tsx scripts/backfill-home-copy.ts",
-    "sanity:backfill-door-copy": "tsx scripts/backfill-door-copy.ts"
+    "sanity:backfill-door-copy": "tsx scripts/backfill-door-copy.ts",
+    "sanity:disable-pickleball-plasty": "tsx scripts/disable-pickleball-plasty.ts"
   },
   "dependencies": {
     "next": "14.2.15",

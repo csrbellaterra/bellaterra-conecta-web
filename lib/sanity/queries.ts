@@ -242,6 +242,34 @@ export const homePageQuery = `
   }
 `;
 
+export const storyPageQuery = `
+  *[_type == "storyPage"][0]{
+    "heroMedia": heroMedia ${media2Projection},
+    heroEyebrow,
+    heroHeadline,
+    heroDetail,
+    originTitle,
+    originBody,
+    "originMedia": originMedia ${media2Projection},
+    identityTitle,
+    identityBody,
+    "identityItems": identityItems[] ${timelineItemProjection},
+    statement,
+    "statementMedia": statementMedia ${media2Projection},
+    futureTitle,
+    futureBody,
+    "futureMedia": futureMedia ${media2Projection},
+    timelineEnabled,
+    "timelineItems": timelineItems[] ${timelineItemProjection},
+    finalCtaHeadline,
+    finalCtaBody,
+    finalCtaLabel,
+    "finalCtaForm": finalCtaForm->slug.current,
+    finalCtaUrl,
+    "seo": seo ${seoProjection}
+  }
+`;
+
 export const pageBySlugQuery = `
   *[_type == "page" && slug.current == $slug][0]{
     "slug": slug.current,

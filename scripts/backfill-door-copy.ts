@@ -1,9 +1,10 @@
 /**
  * Backfill NO destructivo del copy editorial V2 de la página de puerta
- * (Fase 3) — SOLO Empresas y Eventos.
+ * (Fase 3: Empresas, Eventos; Fase 4A: Estancias, Comunidad; Fase 4B:
+ * Pickleball).
  *
- * Rellena los campos de texto nuevos de `door-empresas` y `door-eventos`
- * (heroEyebrow, heroHeadline, heroDescription, primaryCtaLabel,
+ * Rellena los campos de texto nuevos de cada `door-*` (heroEyebrow,
+ * heroHeadline, heroDescription, primaryCtaLabel, featuresTitle,
  * timelineTitle, spacesTitle, finalCtaHeadline, finalCtaBody,
  * finalCtaLabel) SOLO si todavía están vacíos — usa exclusivamente
  * `patch().setIfMissing()`, nunca `createOrReplace` ni `set()`. Si ya
@@ -47,7 +48,7 @@ if (!writeToken) fail('Falta SANITY_API_WRITE_TOKEN en .env.local (permisos "Edi
 
 const client: SanityClient = createClient({ projectId, dataset, apiVersion, token: writeToken, useCdn: false });
 
-const DOOR_IDS = ["empresas", "eventos"] as const;
+const DOOR_IDS = ["empresas", "eventos", "estancias", "comunidad", "pickleball"] as const;
 
 async function run() {
   console.log(`\nBackfill de copy editorial V2 (página de puerta) en el dataset "${dataset}" (solo campos vacíos)...\n`);
@@ -61,6 +62,7 @@ async function run() {
         heroHeadline: copy.hero.headline,
         heroDescription: copy.hero.description,
         primaryCtaLabel: copy.hero.ctaLabel,
+        featuresTitle: copy.featureSectionsHeading,
         timelineTitle: copy.timeline.title,
         spacesTitle: copy.spaces.title,
         finalCtaHeadline: copy.finalCta.headline,

@@ -1,4 +1,4 @@
-import { CalendarIcon, CogIcon, EnvelopeIcon, HomeIcon, ImagesIcon } from "@sanity/icons";
+import { BookIcon, CalendarIcon, CogIcon, EnvelopeIcon, HomeIcon, ImagesIcon } from "@sanity/icons";
 import type { StructureResolver } from "sanity/structure";
 
 /**
@@ -32,6 +32,10 @@ export const structure: StructureResolver = (S) =>
       S.listItem()
         .title("Páginas")
         .child(S.documentTypeList("page").title("Páginas")),
+      S.listItem()
+        .title("Nuestra Historia")
+        .icon(BookIcon)
+        .child(S.document().schemaType("storyPage").documentId("storyPage")),
       S.divider(),
       S.listItem()
         .title("Eventos (Family Days)")

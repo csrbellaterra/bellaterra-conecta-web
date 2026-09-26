@@ -12,13 +12,12 @@ const nextConfig = {
     // El linteo se ejecuta aparte con `pnpm lint`; no bloquea el build.
     ignoreDuringBuilds: false,
   },
-  // V2: el redirect /la-finca -> /nuestra-historia se retira
-  // TEMPORALMENTE — /nuestra-historia todavía no existe como página
-  // (se construye en Fase 4) y con el redirect activo /la-finca daba
-  // 404. /la-finca sigue funcionando con su contenido actual mientras
-  // tanto. Cuando Nuestra Historia esté lista, se reactiva este
-  // redirect (ver next.config.mjs.bak más abajo si se prefiere
-  // recuperar el bloque exacto):
+  // V2 — Fase 4B: /nuestra-historia ya existe como página funcional,
+  // pero el redirect /la-finca -> /nuestra-historia sigue
+  // DELIBERADAMENTE desactivado hasta que llegue una instrucción
+  // explícita de activarlo. /la-finca sigue funcionando con su
+  // contenido actual (documento `page`, sin tocar) mientras tanto.
+  // Para reactivar, descomentar el bloque redirects() de abajo:
   //
   // async redirects() {
   //   return [

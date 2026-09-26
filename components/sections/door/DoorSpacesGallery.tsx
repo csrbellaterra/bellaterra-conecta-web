@@ -3,7 +3,7 @@ import Container from "@/components/ui/Container";
 import AnimatedIn from "@/components/ui/AnimatedIn";
 import EditorialMediaList from "@/components/ui/EditorialMediaList";
 import { mediaFieldFromV2 } from "@/lib/media";
-import { DOOR_PAGE_COPY } from "@/lib/doorCopy";
+import { DOOR_PAGE_COPY, type DoorCopyId } from "@/lib/doorCopy";
 
 /**
  * "Espacios" (Empresas) / "Un evento, diferentes espacios" (Eventos)
@@ -18,7 +18,7 @@ import { DOOR_PAGE_COPY } from "@/lib/doorCopy";
  * publicadas) cuando spacesGallery está vacío.
  */
 export default function DoorSpacesGallery({ door }: { door: Door }) {
-  const copy = DOOR_PAGE_COPY[door.id as "empresas" | "eventos"];
+  const copy = DOOR_PAGE_COPY[door.id as DoorCopyId];
   const title = door.spacesTitle || copy.spaces.title;
 
   const items: { label: string; title: string; media?: MediaField }[] =

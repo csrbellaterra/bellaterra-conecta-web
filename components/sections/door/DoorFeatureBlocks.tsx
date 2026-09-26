@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Door, FeatureItem, Media as MediaV2, MediaField, SanityImage } from "@/types/content";
 import Container from "@/components/ui/Container";
 import Media from "@/components/ui/Media";
@@ -5,7 +6,7 @@ import AnimatedIn from "@/components/ui/AnimatedIn";
 import EditorialMediaList from "@/components/ui/EditorialMediaList";
 import { cn } from "@/lib/utils";
 import { mediaFieldFromV2 } from "@/lib/media";
-import { DOOR_PAGE_COPY } from "@/lib/doorCopy";
+import { DOOR_PAGE_COPY, type DoorCopyId } from "@/lib/doorCopy";
 
 function imageAsMediaField(image?: SanityImage): MediaField | undefined {
   if (!image) return undefined;
@@ -35,7 +36,7 @@ function resolveMedia(itemMedia: MediaV2 | undefined, fallbackImage: SanityImage
  * desktop y prefers-reduced-motion).
  */
 export default function DoorFeatureBlocks({ door }: { door: Door }) {
-  const copy = DOOR_PAGE_COPY[door.id as "empresas" | "eventos"];
+  const copy = DOOR_PAGE_COPY[door.id as DoorCopyId];
   const sanityItems = (door.featureSections?.filter((item) => item._type === "featureItem") as FeatureItem[] | undefined) ?? [];
 
   const items =
@@ -44,11 +45,15 @@ export default function DoorFeatureBlocks({ door }: { door: Door }) {
           title: item.title,
           body: item.body,
           media: resolveMedia(item.media, door.gallery?.[index]),
+          ctaLabel: item.ctaLabel,
+          ctaUrl: item.ctaUrl,
         }))
       : copy.featureItemsFallback.map((item, index) => ({
           title: item.title,
           body: item.body,
           media: imageAsMediaField(door.gallery?.[index]),
+          ctaLabel: item.ctaLabel,
+          ctaUrl: item.ctaUrl,
         }));
 
   const heading = door.featuresTitle || copy.featureSectionsHeading;
@@ -101,6 +106,14 @@ export default function DoorFeatureBlocks({ door }: { door: Door }) {
                   <h3 className="font-serif text-3xl text-text sm:text-4xl">{item.title}</h3>
                   {item.body ? (
                     <p className="max-w-sm font-sans text-base leading-relaxed text-muted">{item.body}</p>
+                  ) : null}
+                  {item.ctaLabel ? (
+                    <Link
+                      href={item.ctaUrl || `/solicitud/${door.slug}`}
+                      className="mt-1 inline-flex w-fit items-center gap-2 font-sans text-sm font-medium text-text underline decoration-olive decoration-2 underline-offset-4 transition-colors hover:text-olive"
+                    >
+                      {item.ctaLabel} <span aria-hidden>→</span>
+                    </Link>
                   ) : null}
                 </AnimatedIn>
 

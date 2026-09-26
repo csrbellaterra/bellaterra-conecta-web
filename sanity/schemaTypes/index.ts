@@ -34,6 +34,7 @@ import homePage from "./documents/homePage";
 import door from "./documents/door";
 import page from "./documents/page";
 import impact from "./documents/impact";
+import storyPage from "./documents/storyPage";
 
 // Documentos V2
 import event from "./documents/event";
@@ -47,6 +48,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   door,
   page,
   impact,
+  storyPage,
   // Documentos V2
   event,
   form,

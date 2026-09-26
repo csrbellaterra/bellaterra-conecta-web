@@ -3,7 +3,7 @@ import type { Door } from "@/types/content";
 import Container from "@/components/ui/Container";
 import Media from "@/components/ui/Media";
 import AnimatedIn from "@/components/ui/AnimatedIn";
-import { DOOR_PAGE_COPY } from "@/lib/doorCopy";
+import { DOOR_PAGE_COPY, type DoorCopyId } from "@/lib/doorCopy";
 
 /**
  * CTA final de la página de puerta (V2) — bloque grande con media,
@@ -13,7 +13,7 @@ import { DOOR_PAGE_COPY } from "@/lib/doorCopy";
  * slug de la puerta — nunca /contacto.
  */
 export default function DoorFinalCta({ door }: { door: Door }) {
-  const copy = DOOR_PAGE_COPY[door.id as "empresas" | "eventos"];
+  const copy = DOOR_PAGE_COPY[door.id as DoorCopyId];
   const headline = door.finalCtaHeadline || copy.finalCta.headline;
   const body = door.finalCtaBody || copy.finalCta.body;
   const ctaLabel = door.finalCtaLabel || copy.finalCta.ctaLabel;

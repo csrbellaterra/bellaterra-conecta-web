@@ -230,6 +230,38 @@ export type ImpactSettings = {
   impactMethodologyUrl?: string;
 };
 
+/**
+ * /nuestra-historia (Fase 4B) — documento único, no es un page builder
+ * genérico: el diseño vive en código
+ * (components/sections/historia/*), Sanity solo controla contenido y
+ * media. Ver sanity/schemaTypes/documents/storyPage.ts.
+ */
+export type StoryPage = {
+  heroMedia: Media;
+  heroEyebrow?: string;
+  heroHeadline: string;
+  heroDetail?: string;
+  originTitle?: string;
+  originBody: string;
+  originMedia?: Media;
+  identityTitle?: string;
+  identityBody: string;
+  identityItems?: TimelineItem[];
+  statement: string;
+  statementMedia?: Media;
+  futureTitle?: string;
+  futureBody: string;
+  futureMedia?: Media;
+  timelineEnabled?: boolean;
+  timelineItems?: TimelineItem[];
+  finalCtaHeadline?: string;
+  finalCtaBody?: string;
+  finalCtaLabel?: string;
+  finalCtaForm?: string;
+  finalCtaUrl?: string;
+  seo: SeoFields;
+};
+
 export type NavLink = {
   label: string;
   url: string;

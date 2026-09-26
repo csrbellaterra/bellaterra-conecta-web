@@ -3,7 +3,7 @@ import Image from "next/image";
 import type { Door } from "@/types/content";
 import Container from "@/components/ui/Container";
 import AnimatedIn from "@/components/ui/AnimatedIn";
-import { DOOR_PAGE_COPY } from "@/lib/doorCopy";
+import { DOOR_PAGE_COPY, type DoorCopyId } from "@/lib/doorCopy";
 
 /**
  * "Quizá también te interese" — puertas relacionadas al final de la
@@ -13,7 +13,7 @@ import { DOOR_PAGE_COPY } from "@/lib/doorCopy";
  * para resolver nombre/imagen/slug de la puerta referenciada.
  */
 export default function DoorRelatedExperiences({ door, allDoors }: { door: Door; allDoors: Door[] }) {
-  const copy = DOOR_PAGE_COPY[door.id as "empresas" | "eventos"];
+  const copy = DOOR_PAGE_COPY[door.id as DoorCopyId];
   const related =
     door.relatedExperiences && door.relatedExperiences.length > 0
       ? door.relatedExperiences

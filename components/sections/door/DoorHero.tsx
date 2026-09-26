@@ -4,13 +4,13 @@ import Container from "@/components/ui/Container";
 import Media from "@/components/ui/Media";
 import HeroReveal from "@/components/ui/HeroReveal";
 import { mediaFieldFromV2 } from "@/lib/media";
-import { DOOR_PAGE_COPY } from "@/lib/doorCopy";
+import { DOOR_PAGE_COPY, type DoorCopyId } from "@/lib/doorCopy";
 
 /**
  * Hero a pantalla completa de la nueva plantilla de puerta (V2),
- * usado solo por Empresas y Eventos (Fase 3) — mismo lenguaje visual
- * que el hero de la Home (fundido + ligero desplazamiento al cargar,
- * NO al hacer scroll, ver HeroReveal).
+ * usado por Empresas, Eventos (Fase 3) y Estancias (Fase 4A) — mismo
+ * lenguaje visual que el hero de la Home (fundido + ligero
+ * desplazamiento al cargar, NO al hacer scroll, ver HeroReveal).
  *
  * Copy: door.heroEyebrow/heroHeadline/heroDescription/primaryCtaLabel
  * (Sanity) → door.eyebrow/headline/introduction/ctaLabel (heredado) →
@@ -21,7 +21,7 @@ import { DOOR_PAGE_COPY } from "@/lib/doorCopy";
  * imagen/vídeo/mobile/poster.
  */
 export default function DoorHero({ door }: { door: Door }) {
-  const copy = DOOR_PAGE_COPY[door.id as "empresas" | "eventos"];
+  const copy = DOOR_PAGE_COPY[door.id as DoorCopyId];
   const eyebrow = door.heroEyebrow || door.eyebrow || copy.hero.eyebrow;
   const headline = door.heroHeadline || door.headline || copy.hero.headline;
   const description = door.heroDescription || door.introduction || copy.hero.description;

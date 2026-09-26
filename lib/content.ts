@@ -10,6 +10,7 @@ import {
   impactSettingsQuery,
   pageBySlugQuery,
   siteSettingsQuery,
+  storyPageQuery,
   upcomingEventsQuery,
 } from "@/lib/sanity/queries";
 import {
@@ -19,6 +20,7 @@ import {
   impactSettings as seedImpactSettings,
   siteSettings as seedSiteSettings,
   staticPages as seedStaticPages,
+  storyPage as seedStoryPage,
 } from "@/lib/sanity/seed-data";
 import type {
   Door,
@@ -31,6 +33,7 @@ import type {
   ImpactSettings,
   Page,
   SiteSettings,
+  StoryPage,
 } from "@/types/content";
 
 /**
@@ -87,6 +90,13 @@ export async function getDoor(slug: DoorId, preview = false): Promise<Door | und
   if (!isSanityConfigured) return getSeedDoorBySlug(slug);
   const data = await fetchSanity<Door>(doorBySlugQuery, { slug }, preview);
   return data ?? getSeedDoorBySlug(slug);
+}
+
+/** /nuestra-historia (Fase 4B) — documento único, ver types/content.ts → StoryPage. */
+export async function getStoryPage(preview = false): Promise<StoryPage> {
+  if (!isSanityConfigured) return seedStoryPage;
+  const data = await fetchSanity<StoryPage>(storyPageQuery, {}, preview);
+  return data ?? seedStoryPage;
 }
 
 export async function getPage(slug: string, preview = false): Promise<Page | undefined> {

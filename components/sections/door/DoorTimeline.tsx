@@ -1,7 +1,7 @@
 import type { Door } from "@/types/content";
 import Container from "@/components/ui/Container";
 import AnimatedIn from "@/components/ui/AnimatedIn";
-import { DOOR_PAGE_COPY } from "@/lib/doorCopy";
+import { DOOR_PAGE_COPY, type DoorCopyId } from "@/lib/doorCopy";
 
 /**
  * "Una jornada a vuestra manera" (Empresas) / "Un solo evento,
@@ -13,7 +13,7 @@ import { DOOR_PAGE_COPY } from "@/lib/doorCopy";
  * narrativos distintos en un mismo array.
  */
 export default function DoorTimeline({ door }: { door: Door }) {
-  const copy = DOOR_PAGE_COPY[door.id as "empresas" | "eventos"];
+  const copy = DOOR_PAGE_COPY[door.id as DoorCopyId];
   const title = door.timelineTitle || copy.timeline.title;
   const items =
     door.timelineItems && door.timelineItems.length > 0
