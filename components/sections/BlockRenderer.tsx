@@ -32,7 +32,7 @@ export default function BlockRenderer({
           case "heroSection":
             return <HeroSection key={index} block={block} priority={index === 0} />;
           case "doorSelectorSection":
-            return doors ? <DoorSelectorSection key={index} block={block} doors={doors} /> : null;
+            return doors ? <DoorSelectorSection key={index} doors={doors} /> : null;
           case "imageTextSection":
             return <ImageTextSection key={index} block={block} />;
           case "experienceSection":

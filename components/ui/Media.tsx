@@ -24,35 +24,85 @@ export default function Media({
   priority?: boolean;
   className?: string;
 }) {
-  if (media.type === "video" && media.videoUrl) {
-    return (
-      <video
-        className={cn("h-full w-full object-cover", className)}
-        src={media.videoUrl}
-        poster={media.poster?.url}
-        autoPlay
-        muted
-        loop
-        playsInline
-      />
-    );
-  }
+  const autoplay = media.autoplay ?? true;
+  const loop = media.loop ?? true;
 
-  if (media.type === "externalVideo" && media.externalVideoUrl) {
+  if ((media.type === "video" && media.videoUrl) || (media.type === "externalVideo" && media.externalVideoUrl)) {
+    const desktopSrc = media.type === "video" ? media.videoUrl! : media.externalVideoUrl!;
+    const mobileSrc = media.mobileVideoUrl;
+
+    if (mobileSrc && mobileSrc !== desktopSrc) {
+      return (
+        <>
+          <video
+            className={cn("h-full w-full object-cover sm:hidden", className)}
+            src={mobileSrc}
+            poster={media.poster?.url}
+            autoPlay={autoplay}
+            muted
+            loop={loop}
+            playsInline
+          />
+          <video
+            className={cn("hidden h-full w-full object-cover sm:block", className)}
+            src={desktopSrc}
+            poster={media.poster?.url}
+            autoPlay={autoplay}
+            muted
+            loop={loop}
+            playsInline
+          />
+        </>
+      );
+    }
+
     return (
       <video
         className={cn("h-full w-full object-cover", className)}
-        src={media.externalVideoUrl}
+        src={desktopSrc}
         poster={media.poster?.url}
-        autoPlay
+        autoPlay={autoplay}
         muted
-        loop
+        loop={loop}
         playsInline
       />
     );
   }
 
   if (!media.image) return null;
+
+  if (media.mobileImage) {
+    return (
+      <>
+        <Image
+          src={media.mobileImage.url}
+          alt={alt ?? media.mobileImage.alt}
+          fill={fill}
+          sizes={sizes}
+          priority={priority}
+          className={cn("object-cover sm:hidden", className)}
+          style={
+            media.mobileImage.hotspot
+              ? { objectPosition: `${media.mobileImage.hotspot.x}% ${media.mobileImage.hotspot.y}%` }
+              : undefined
+          }
+        />
+        <Image
+          src={media.image.url}
+          alt={alt ?? media.image.alt}
+          fill={fill}
+          sizes={sizes}
+          priority={priority}
+          className={cn("hidden object-cover sm:block", className)}
+          style={
+            media.image.hotspot
+              ? { objectPosition: `${media.image.hotspot.x}% ${media.image.hotspot.y}%` }
+              : undefined
+          }
+        />
+      </>
+    );
+  }
 
   return (
     <Image

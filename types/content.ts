@@ -23,6 +23,13 @@ export type MediaField = {
   /** URL de un vídeo externo (ej. Mux/Cloudinary/YouTube) */
   externalVideoUrl?: string;
   poster?: SanityImage;
+  /** ---------- Campos V2 (aditivos, opcionales) ---------- */
+  /** sustituye a `image` en pantallas estrechas; si no está, se usa `image` */
+  mobileImage?: SanityImage;
+  /** sustituye al vídeo principal en pantallas estrechas; si no está, se usa el vídeo principal */
+  mobileVideoUrl?: string;
+  autoplay?: boolean;
+  loop?: boolean;
 };
 
 export type SeoFields = {
@@ -71,6 +78,12 @@ export type Door = {
   /** desactivado por defecto para Pickleball: no hay modelo PLASTY nuevo definido todavía */
   plastyContributionEnabled?: boolean;
   plastyContributionText?: string;
+  /** ---------- Teaser en la Home (V2, aditivo, opcional) ---------- */
+  homeEyebrow?: string;
+  homeHeadline?: string;
+  homeDescription?: string;
+  homeCtaLabel?: string;
+  homeMedia?: Media;
 };
 
 export type DoorIconName = "briefcase" | "party" | "bed" | "community" | "pickleball";
@@ -166,14 +179,33 @@ export type Page = {
 export type HomePage = {
   hero: HeroBlock;
   selectorHeading: string;
+  /** heredado — usar selectorIntroduction en su lugar cuando exista */
   selectorSubheading: string;
   connectionSection: {
+    /** heredado — usar connectionHeadline en su lugar cuando exista */
     heading: string;
     media: MediaField;
   };
   impactSection: ImpactBlock;
+  /** heredado — usar los campos finalCta* en su lugar cuando existan */
   footerCta?: CtaBlock;
   seo: SeoFields;
+  /** ---------- Copy editorial V2 (aditivo, opcional) ---------- */
+  selectorIntroduction?: string;
+  connectionEyebrow?: string;
+  connectionHeadline?: string;
+  plastyEyebrow?: string;
+  plastyHeadline?: string;
+  plastyBody?: string;
+  plastyCtaLabel?: string;
+  plastyCtaUrl?: string;
+  finalCtaEyebrow?: string;
+  finalCtaHeadline?: string;
+  finalCtaBody?: string;
+  finalCtaLabel?: string;
+  /** slug del formulario referenciado; tiene prioridad sobre finalCtaUrl */
+  finalCtaForm?: string;
+  finalCtaUrl?: string;
 };
 
 export type ImpactSettings = {

@@ -13,7 +13,8 @@
     "typecheck": "tsc --noEmit",
     "sanity:seed": "tsx scripts/seed-sanity.ts",
     "sanity:create-forms": "tsx scripts/create-forms.ts",
-    "sanity:create-family-days": "tsx scripts/create-family-days.ts"
+    "sanity:create-family-days": "tsx scripts/create-family-days.ts",
+    "sanity:backfill-home-copy": "tsx scripts/backfill-home-copy.ts"
   },
   "dependencies": {
     "next": "14.2.15",

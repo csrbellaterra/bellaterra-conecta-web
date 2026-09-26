@@ -5,13 +5,13 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import HeroSection from "@/components/sections/HeroSection";
 import DoorSelectorSection from "@/components/sections/DoorSelectorSection";
-import ExperienceSection from "@/components/sections/ExperienceSection";
-import ImpactSection from "@/components/sections/ImpactSection";
-import CtaSection from "@/components/sections/CtaSection";
+import HomeExperienceSection from "@/components/sections/HomeExperienceSection";
+import PlastySection from "@/components/sections/PlastySection";
+import HomeFinalCta from "@/components/sections/HomeFinalCta";
 import Container from "@/components/ui/Container";
 import Media from "@/components/ui/Media";
 import AnimatedIn from "@/components/ui/AnimatedIn";
-import type { ExperienceBlock } from "@/types/content";
+import { HOME_CONNECTION_COPY } from "@/lib/homeCopy";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { isEnabled: preview } = draftMode();
@@ -23,10 +23,19 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * Home page: sigue el orden exacto de la maqueta aprobada — hero →
- * selector de 5 puertas → 5 secciones alternadas (una por puerta,
- * en el mismo orden 01–05) → sección de conexión → sección de
- * impacto (NO es una sexta puerta) → CTA final → footer.
+ * Home page (V2): hero → selector de 5 puertas (filas accionables) →
+ * 5 secciones editoriales alternadas (una por puerta, 01–05) →
+ * sección de conexión → sección PLASTY (NO es una sexta puerta) →
+ * CTA final → footer.
+ *
+ * El copy editorial de la Home (selector, las 5 puertas, conexión,
+ * PLASTY, CTA final) se lee de Sanity (homePage.*, door.home*) — ver
+ * sanity/schemaTypes/documents/homePage.ts y door.ts. lib/homeCopy.ts
+ * solo se usa como FALLBACK mientras esos campos estén vacíos en
+ * documentos ya publicados; en cuanto se rellenan desde el Studio,
+ * ese valor prevalece siempre. Toda la media (home.hero.media,
+ * home.connectionSection.media, door.heroMedia/homeMedia) es 100%
+ * editable desde Sanity.
  */
 export default async function HomePage() {
   const { isEnabled: preview } = draftMode();
@@ -37,6 +46,8 @@ export default async function HomePage() {
   ]);
 
   const sortedDoors = [...doors].sort((a, b) => a.order - b.order);
+  const connectionEyebrow = home.connectionEyebrow;
+  const connectionHeadline = home.connectionHeadline || home.connectionSection.heading || HOME_CONNECTION_COPY.heading;
 
   return (
     <>
@@ -45,24 +56,14 @@ export default async function HomePage() {
         <HeroSection block={home.hero} priority />
 
         <DoorSelectorSection
-          block={{ _type: "doorSelectorSection", heading: home.selectorHeading, subheading: home.selectorSubheading }}
           doors={sortedDoors}
+          heading={home.selectorHeading}
+          introduction={home.selectorIntroduction || home.selectorSubheading}
         />
 
-        {sortedDoors.map((door, index) => {
-          const experienceBlock: ExperienceBlock = {
-            _type: "experienceSection",
-            doorId: door.id,
-            eyebrow: door.eyebrow,
-            headline: door.headline,
-            body: door.introduction,
-            ctaLabel: `Descubre ${door.name}`,
-            ctaUrl: `/${door.slug}`,
-            media: door.heroMedia,
-            imageSide: index % 2 === 0 ? "left" : "right",
-          };
-          return <ExperienceSection key={door.id} block={experienceBlock} />;
-        })}
+        {sortedDoors.map((door, index) => (
+          <HomeExperienceSection key={door.id} door={door} index={index} />
+        ))}
 
         <section className="bg-surface py-20 sm:py-28">
           <Container className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
@@ -70,16 +71,21 @@ export default async function HomePage() {
               <Media media={home.connectionSection.media} alt="Vista aérea de la finca" />
             </AnimatedIn>
             <AnimatedIn className="lg:order-1" delay={0.1}>
+              {connectionEyebrow ? (
+                <span className="mb-3 block font-sans text-xs uppercase tracking-[0.25em] text-olive">
+                  {connectionEyebrow}
+                </span>
+              ) : null}
               <h2 className="whitespace-pre-line font-serif text-3xl leading-tight text-text sm:text-4xl">
-                {home.connectionSection.heading}
+                {connectionHeadline}
               </h2>
             </AnimatedIn>
           </Container>
         </section>
 
-        <ImpactSection block={home.impactSection} impact={impact} />
+        <PlastySection home={home} impact={impact} />
 
-        {home.footerCta ? <CtaSection block={home.footerCta} /> : null}
+        <HomeFinalCta home={home} />
       </main>
       <Footer />
     </>

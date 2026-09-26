@@ -23,7 +23,11 @@ const mediaProjection = `{
   "image": image ${imageProjection},
   "videoUrl": video.asset->url,
   externalVideoUrl,
-  "poster": poster ${imageProjection}
+  "poster": poster ${imageProjection},
+  "mobileImage": mobileImage ${imageProjection},
+  "mobileVideoUrl": mobileVideo.asset->url,
+  autoplay,
+  loop
 }`;
 
 const seoProjection = `{
@@ -153,7 +157,12 @@ export const doorFieldsProjection = `{
   "relatedExperiences": relatedExperiences[] ${relatedExperienceProjection},
   "primaryForm": primaryForm->slug.current,
   plastyContributionEnabled,
-  plastyContributionText
+  plastyContributionText,
+  homeEyebrow,
+  homeHeadline,
+  homeDescription,
+  homeCtaLabel,
+  "homeMedia": homeMedia ${media2Projection}
 }`;
 
 export const allDoorsQuery = `
@@ -197,12 +206,26 @@ export const homePageQuery = `
     "hero": hero ${blockProjection},
     selectorHeading,
     selectorSubheading,
+    selectorIntroduction,
     connectionSection{
       heading,
       "media": media ${mediaProjection}
     },
+    connectionEyebrow,
+    connectionHeadline,
     "impactSection": impactSection ${blockProjection},
+    plastyEyebrow,
+    plastyHeadline,
+    plastyBody,
+    plastyCtaLabel,
+    plastyCtaUrl,
     "footerCta": footerCta ${blockProjection},
+    finalCtaEyebrow,
+    finalCtaHeadline,
+    finalCtaBody,
+    finalCtaLabel,
+    "finalCtaForm": finalCtaForm->slug.current,
+    finalCtaUrl,
     "seo": seo ${seoProjection}
   }
 `;

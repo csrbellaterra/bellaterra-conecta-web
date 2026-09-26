@@ -39,7 +39,7 @@ export default function DoorPageTemplate({ door }: { door: Door }) {
             <AnimatedIn>
               <p className="max-w-2xl font-sans text-lg leading-relaxed text-muted">{door.introduction}</p>
               <Link
-                href={door.ctaUrl}
+                href={`/solicitud/${door.slug}`}
                 className="mt-6 inline-flex w-fit items-center gap-2 rounded-pill bg-olive px-6 py-3 font-sans text-sm font-medium tracking-wide text-white transition-colors hover:bg-olive-dark"
               >
                 {door.ctaLabel} <span aria-hidden>→</span>

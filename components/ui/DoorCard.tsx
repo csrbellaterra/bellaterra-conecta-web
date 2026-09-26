@@ -1,38 +1,59 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Door } from "@/types/content";
+import DoorIcon from "@/components/ui/DoorIcon";
 
 /**
- * Tarjeta de una puerta en el selector horizontal de 5 puertas de la
- * home. Las 5 se muestran siempre a la vez (grid, no carrusel) — ver
+ * Fila accionable del selector de 5 puertas de la home (V2) — NO son
+ * cards verticales de foto completa. Cada fila: [mini imagen][01]
+ * [icono][nombre][descripción][→], clicable en toda su superficie.
+ * Las 5 se muestran siempre a la vez (nunca carrusel) — ver
  * components/sections/DoorSelectorSection.tsx.
+ *
+ * `description` es el texto corto específico de esta fila (dado por
+ * el prompt V2 aprobado), distinto de door.eyebrow/shortDescription
+ * (que siguen usándose en la propia página de la puerta).
  */
-export default function DoorCard({ door }: { door: Door }) {
+export default function DoorCard({ door, description }: { door: Door; description: string }) {
   return (
     <Link
       href={`/${door.slug}`}
-      className="group relative flex h-[420px] flex-col justify-end overflow-hidden rounded-card border border-border bg-surface transition-transform duration-500 ease-out hover:-translate-y-1 focus-visible:-translate-y-1 sm:h-[480px]"
+      className="group flex items-center gap-4 border-b border-border py-5 transition-colors last:border-b-0 hover:border-olive/40 sm:gap-6 sm:py-7"
     >
-      <Image
-        src={door.selectorImage.url}
-        alt={door.selectorImage.alt}
-        fill
-        sizes="(min-width: 1024px) 20vw, (min-width: 640px) 33vw, 100vw"
-        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-        style={
-          door.selectorImage.hotspot
-            ? { objectPosition: `${door.selectorImage.hotspot.x}% ${door.selectorImage.hotspot.y}%` }
-            : undefined
-        }
-      />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/20 to-transparent" />
-      <div className="relative z-10 flex flex-col gap-2 p-5 sm:p-6">
-        <span className="font-sans text-xs tracking-[0.2em] text-white/70">
-          {String(door.order).padStart(2, "0")}
+      <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-card bg-surface sm:h-20 sm:w-20">
+        <Image
+          src={door.selectorImage.url}
+          alt=""
+          fill
+          sizes="80px"
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+          style={
+            door.selectorImage.hotspot
+              ? { objectPosition: `${door.selectorImage.hotspot.x}% ${door.selectorImage.hotspot.y}%` }
+              : undefined
+          }
+        />
+      </span>
+
+      <span className="hidden font-sans text-sm tracking-[0.15em] text-muted sm:block sm:w-8">
+        {String(door.order).padStart(2, "0")}
+      </span>
+
+      <DoorIcon name={door.icon} className="hidden h-6 w-6 shrink-0 text-olive sm:block" />
+
+      <span className="min-w-0 flex-1">
+        <span className="block font-serif text-xl text-text transition-colors group-hover:text-olive-dark sm:text-2xl">
+          {door.name}
         </span>
-        <span className="font-serif text-2xl text-white sm:text-[1.75rem]">{door.name}</span>
-        <span className="font-sans text-sm leading-snug text-white/80">{door.eyebrow}</span>
-      </div>
+        <span className="mt-0.5 block truncate font-sans text-sm text-muted sm:whitespace-normal">{description}</span>
+      </span>
+
+      <span
+        aria-hidden
+        className="shrink-0 font-sans text-lg text-muted transition-transform duration-300 ease-out group-hover:translate-x-[3px] group-hover:text-olive"
+      >
+        →
+      </span>
     </Link>
   );
 }
