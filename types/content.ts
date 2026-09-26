@@ -84,6 +84,20 @@ export type Door = {
   homeDescription?: string;
   homeCtaLabel?: string;
   homeMedia?: Media;
+  /** ---------- Página de la puerta (V2, Fase 3, aditivo, opcional) ---------- */
+  heroEyebrow?: string;
+  heroHeadline?: string;
+  heroDescription?: string;
+  primaryCtaLabel?: string;
+  featuresTitle?: string;
+  timelineTitle?: string;
+  timelineItems?: TimelineItem[];
+  spacesTitle?: string;
+  finalCtaHeadline?: string;
+  finalCtaBody?: string;
+  finalCtaLabel?: string;
+  /** slug del formulario; tiene prioridad sobre primaryForm y sobre el slug de la puerta */
+  finalCtaForm?: string;
 };
 
 export type DoorIconName = "briefcase" | "party" | "bed" | "community" | "pickleball";

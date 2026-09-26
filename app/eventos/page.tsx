@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { draftMode } from "next/headers";
-import { getDoor } from "@/lib/content";
-import DoorPageTemplate from "@/components/DoorPageTemplate";
+import { getAllDoors, getDoor } from "@/lib/content";
+import DoorPageTemplateV2 from "@/components/DoorPageTemplateV2";
 
 const DOOR_ID = "eventos" as const;
 
@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function EventosPage() {
   const { isEnabled: preview } = draftMode();
-  const door = await getDoor(DOOR_ID, preview);
+  const [door, allDoors] = await Promise.all([getDoor(DOOR_ID, preview), getAllDoors(preview)]);
   if (!door) notFound();
-  return <DoorPageTemplate door={door} />;
+  return <DoorPageTemplateV2 door={door} allDoors={allDoors} />;
 }

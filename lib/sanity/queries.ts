@@ -162,7 +162,19 @@ export const doorFieldsProjection = `{
   homeHeadline,
   homeDescription,
   homeCtaLabel,
-  "homeMedia": homeMedia ${media2Projection}
+  "homeMedia": homeMedia ${media2Projection},
+  heroEyebrow,
+  heroHeadline,
+  heroDescription,
+  primaryCtaLabel,
+  featuresTitle,
+  timelineTitle,
+  "timelineItems": timelineItems[] ${timelineItemProjection},
+  spacesTitle,
+  finalCtaHeadline,
+  finalCtaBody,
+  finalCtaLabel,
+  "finalCtaForm": finalCtaForm->slug.current
 }`;
 
 export const allDoorsQuery = `
