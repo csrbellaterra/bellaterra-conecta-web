@@ -61,6 +61,16 @@ export type Door = {
   ctaUrl: string;
   plastyContribution?: PlastyContribution;
   seo: SeoFields;
+  /** ---------- Campos V2 (aditivos, opcionales) ---------- */
+  heroMobileMedia?: Media;
+  featureSections?: (FeatureItem | TimelineItem)[];
+  spacesGallery?: SpaceItem[];
+  relatedExperiences?: RelatedExperience[];
+  /** slug del formulario principal de esta puerta (ver FormDoc) */
+  primaryForm?: string;
+  /** desactivado por defecto para Pickleball: no hay modelo PLASTY nuevo definido todavía */
+  plastyContributionEnabled?: boolean;
+  plastyContributionText?: string;
 };
 
 export type DoorIconName = "briefcase" | "party" | "bed" | "community" | "pickleball";
@@ -193,4 +203,168 @@ export type SiteSettings = {
   footerMessage?: string;
   footerLinks: NavLink[];
   legalLinks: NavLink[];
+};
+
+/** ---------- Objetos reutilizables V2 ---------- */
+
+/**
+ * Objeto de media "V2" (sanity/schemaTypes/objects/media.ts), más
+ * completo que MediaField: soporta variantes de móvil, poster y
+ * control de autoplay/loop. Nuevo, no sustituye a MediaField (que
+ * sigue usándose en heroMedia/contentBlocks ya publicados).
+ */
+export type Media = {
+  mediaType: "image" | "uploadedVideo" | "externalVideo";
+  image?: SanityImage;
+  videoUrl?: string;
+  externalVideoUrl?: string;
+  poster?: SanityImage;
+  mobileImage?: SanityImage;
+  mobileVideoUrl?: string;
+  caption?: string;
+  autoplay?: boolean;
+  loop?: boolean;
+};
+
+export type FeatureItem = {
+  _type: "featureItem";
+  eyebrow?: string;
+  title: string;
+  body?: string;
+  media?: Media;
+  ctaLabel?: string;
+  ctaUrl?: string;
+};
+
+export type TimelineItem = {
+  _type: "timelineItem";
+  label?: string;
+  title: string;
+  body?: string;
+  media?: Media;
+};
+
+export type SpaceItem = {
+  media: Media;
+  caption?: string;
+};
+
+export type Stat = {
+  value: string;
+  label: string;
+  note?: string;
+};
+
+export type Cta = {
+  label: string;
+  actionType: "url" | "form";
+  url?: string;
+  /** slug del formulario referenciado, cuando actionType es "form" */
+  form?: string;
+};
+
+export type RelatedExperience = {
+  door: DoorId;
+  note?: string;
+};
+
+/** ---------- Sistema de formularios V2 ---------- */
+
+export type FormOption = {
+  value: string;
+  label: string;
+  description?: string;
+  media?: Media;
+};
+
+export type FormQuestionType =
+  | "shortText"
+  | "longText"
+  | "email"
+  | "phone"
+  | "number"
+  | "date"
+  | "select"
+  | "multiSelect"
+  | "singleChoice"
+  | "checkbox"
+  | "yesNo"
+  | "peopleCount"
+  | "optionCards";
+
+export type FormQuestionConditionalLogic = {
+  dependsOnQuestionId?: string;
+  condition?: "equals" | "notEquals";
+  value?: string;
+};
+
+export type FormQuestion = {
+  /** id estable, se usa como clave en answersJson al enviar */
+  id: string;
+  type: FormQuestionType;
+  label: string;
+  helpText?: string;
+  placeholder?: string;
+  required: boolean;
+  options?: FormOption[];
+  step?: number;
+  width?: "full" | "half";
+  conditionalLogic?: FormQuestionConditionalLogic;
+};
+
+export type FormDoc = {
+  slug: string;
+  title: string;
+  internalName?: string;
+  active: boolean;
+  introTitle?: string;
+  introText?: string;
+  successTitle?: string;
+  successText?: string;
+  submitLabel: string;
+  questions: FormQuestion[];
+  seo?: SeoFields;
+};
+
+/** ---------- Eventos (Family Days) V2 ---------- */
+
+export type EventStatus = "upcoming" | "open" | "full" | "closed" | "past";
+
+export type EventScheduleItem = {
+  time: string;
+  activity: string;
+};
+
+export type Event = {
+  slug: string;
+  title: string;
+  type: "familyDay";
+  date: string;
+  startTime?: string;
+  endTime?: string;
+  status: EventStatus;
+  priceText?: string;
+  shortDescription?: string;
+  media?: Media;
+  mobileMedia?: Media;
+  schedule: EventScheduleItem[];
+  /** slug del formulario de inscripción de este evento */
+  registrationForm?: string;
+  registrationOpen: boolean;
+  capacity?: number;
+  featured: boolean;
+  seo?: SeoFields;
+};
+
+/** ---------- Galería V2 ---------- */
+
+export type GalleryCategory = "finca" | "empresas" | "eventos" | "estancias" | "comunidad" | "pickleball";
+
+export type GalleryItem = {
+  title?: string;
+  media: Media;
+  category: GalleryCategory;
+  caption?: string;
+  featured: boolean;
+  order?: number;
 };

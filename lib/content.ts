@@ -3,10 +3,14 @@ import { getClient } from "@/lib/sanity/client";
 import {
   allDoorsQuery,
   doorBySlugQuery,
+  eventBySlugQuery,
+  formBySlugQuery,
+  galleryItemsQuery,
   homePageQuery,
   impactSettingsQuery,
   pageBySlugQuery,
   siteSettingsQuery,
+  upcomingEventsQuery,
 } from "@/lib/sanity/queries";
 import {
   doors as seedDoors,
@@ -19,6 +23,10 @@ import {
 import type {
   Door,
   DoorId,
+  Event,
+  FormDoc,
+  GalleryCategory,
+  GalleryItem,
   HomePage,
   ImpactSettings,
   Page,
@@ -88,3 +96,39 @@ export async function getPage(slug: string, preview = false): Promise<Page | und
 }
 
 export const DOOR_IDS: DoorId[] = ["empresas", "eventos", "estancias", "comunidad", "pickleball"];
+
+/**
+ * ---------- V2: Eventos (Family Days), Formularios, Galería ----------
+ *
+ * Estos tipos de contenido son nuevos en la V2 y no existen en los
+ * datos locales de respaldo (lib/sanity/seed-data.ts): sin Sanity
+ * configurado, o sin contenido aún publicado, devuelven listas vacías
+ * / undefined en vez de inventar contenido de ejemplo.
+ */
+
+/** Próximos eventos (fecha >= hoy), ordenados por fecha. `type` filtra por tipo de evento (ej. "familyDay"); si se omite, devuelve todos los tipos. */
+export async function getUpcomingEvents(type?: Event["type"], preview = false): Promise<Event[]> {
+  if (!isSanityConfigured) return [];
+  const data = await fetchSanity<Event[]>(upcomingEventsQuery, { type: type ?? null }, preview);
+  return data ?? [];
+}
+
+export async function getEvent(slug: string, preview = false): Promise<Event | undefined> {
+  if (!isSanityConfigured) return undefined;
+  const data = await fetchSanity<Event>(eventBySlugQuery, { slug }, preview);
+  return data ?? undefined;
+}
+
+/** Formulario activo por slug, para /solicitud/[slug] y cualquier CTA que abra un formulario. */
+export async function getForm(slug: string, preview = false): Promise<FormDoc | undefined> {
+  if (!isSanityConfigured) return undefined;
+  const data = await fetchSanity<FormDoc>(formBySlugQuery, { slug }, preview);
+  return data ?? undefined;
+}
+
+/** Elementos de /galeria. `category` filtra (ej. "empresas"); si se omite, devuelve todas las categorías. */
+export async function getGalleryItems(category?: GalleryCategory, preview = false): Promise<GalleryItem[]> {
+  if (!isSanityConfigured) return [];
+  const data = await fetchSanity<GalleryItem[]>(galleryItemsQuery, { category: category ?? null }, preview);
+  return data ?? [];
+}

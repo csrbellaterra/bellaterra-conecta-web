@@ -1,4 +1,4 @@
-import { CogIcon, HomeIcon } from "@sanity/icons";
+import { CalendarIcon, CogIcon, EnvelopeIcon, HomeIcon, ImagesIcon } from "@sanity/icons";
 import type { StructureResolver } from "sanity/structure";
 
 /**
@@ -6,6 +6,12 @@ import type { StructureResolver } from "sanity/structure";
  * impact son documentos únicos (singleton) — se abren directamente,
  * sin pasar por una lista donde se podrían crear duplicados por
  * error. door y page son colecciones normales.
+ *
+ * Este archivo se llama `structure.config.ts` (no `structure.ts`) a
+ * propósito, para no colisionar con el subpath del paquete
+ * `sanity/structure` (de donde sale `structureTool`) bajo el
+ * `baseUrl: "."` de tsconfig.json — ver el comentario en
+ * sanity.config.ts.
  */
 export const structure: StructureResolver = (S) =>
   S.list()
@@ -26,6 +32,19 @@ export const structure: StructureResolver = (S) =>
       S.listItem()
         .title("Páginas")
         .child(S.documentTypeList("page").title("Páginas")),
+      S.divider(),
+      S.listItem()
+        .title("Eventos (Family Days)")
+        .icon(CalendarIcon)
+        .child(S.documentTypeList("event").title("Eventos (Family Days)")),
+      S.listItem()
+        .title("Formularios")
+        .icon(EnvelopeIcon)
+        .child(S.documentTypeList("form").title("Formularios")),
+      S.listItem()
+        .title("Galería")
+        .icon(ImagesIcon)
+        .child(S.documentTypeList("galleryItem").title("Galería")),
       S.divider(),
       S.listItem()
         .title("Impacto (PLASTY)")

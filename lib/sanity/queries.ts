@@ -59,6 +59,73 @@ const plastyProjection = `{
   note
 }`;
 
+/**
+ * Proyección del objeto "media" V2 (sanity/schemaTypes/objects/media.ts),
+ * más completo que mediaProjection (que sigue usándose para el campo
+ * mediaField original ya publicado). Se usa en todo el contenido
+ * nuevo de la V2: event, galleryItem, featureItem, timelineItem, etc.
+ */
+const media2Projection = `{
+  mediaType,
+  "image": image ${imageProjection},
+  "videoUrl": videoFile.asset->url,
+  externalVideoUrl,
+  "poster": poster ${imageProjection},
+  "mobileImage": mobileImage ${imageProjection},
+  "mobileVideoUrl": mobileVideo.asset->url,
+  caption,
+  autoplay,
+  loop
+}`;
+
+const featureItemProjection = `{
+  _type,
+  eyebrow,
+  title,
+  body,
+  "media": media ${media2Projection},
+  ctaLabel,
+  ctaUrl
+}`;
+
+const timelineItemProjection = `{
+  _type,
+  label,
+  title,
+  body,
+  "media": media ${media2Projection}
+}`;
+
+const spaceItemProjection = `{
+  "media": media ${media2Projection},
+  caption
+}`;
+
+const relatedExperienceProjection = `{
+  "door": door->slug.current,
+  note
+}`;
+
+const formOptionProjection = `{
+  value,
+  label,
+  description,
+  "media": media ${media2Projection}
+}`;
+
+const formQuestionProjection = `{
+  id,
+  type,
+  label,
+  helpText,
+  placeholder,
+  required,
+  "options": options[] ${formOptionProjection},
+  step,
+  width,
+  conditionalLogic
+}`;
+
 export const doorFieldsProjection = `{
   "id": slug.current,
   "slug": slug.current,
@@ -76,7 +143,17 @@ export const doorFieldsProjection = `{
   ctaLabel,
   ctaUrl,
   "plastyContribution": plastyContribution ${plastyProjection},
-  "seo": seo ${seoProjection}
+  "seo": seo ${seoProjection},
+  "heroMobileMedia": heroMobileMedia ${media2Projection},
+  "featureSections": featureSections[]{
+    _type == "featureItem" => ${featureItemProjection},
+    _type == "timelineItem" => ${timelineItemProjection}
+  },
+  "spacesGallery": spacesGallery[] ${spaceItemProjection},
+  "relatedExperiences": relatedExperiences[] ${relatedExperienceProjection},
+  "primaryForm": primaryForm->slug.current,
+  plastyContributionEnabled,
+  plastyContributionText
 }`;
 
 export const allDoorsQuery = `
@@ -141,4 +218,75 @@ export const pageBySlugQuery = `
 
 export const allPageSlugsQuery = `
   *[_type == "page" && defined(slug.current)][].slug.current
+`;
+
+/** ---------- Eventos (Family Days) V2 ---------- */
+
+export const eventFieldsProjection = `{
+  "slug": slug.current,
+  title,
+  type,
+  date,
+  startTime,
+  endTime,
+  status,
+  priceText,
+  shortDescription,
+  "media": media ${media2Projection},
+  "mobileMedia": mobileMedia ${media2Projection},
+  schedule,
+  "registrationForm": registrationForm->slug.current,
+  registrationOpen,
+  capacity,
+  featured,
+  "seo": seo ${seoProjection}
+}`;
+
+/** Próximos eventos (fecha >= hoy), ordenados por fecha ascendente. Pasa $type para filtrar por tipo (ej. "familyDay"), o null para todos. */
+export const upcomingEventsQuery = `
+  *[_type == "event" && date >= now() && (!defined($type) || type == $type)] | order(date asc) ${eventFieldsProjection}
+`;
+
+export const allEventsQuery = `
+  *[_type == "event"] | order(date asc) ${eventFieldsProjection}
+`;
+
+export const eventBySlugQuery = `
+  *[_type == "event" && slug.current == $slug][0] ${eventFieldsProjection}
+`;
+
+/** ---------- Formularios V2 ---------- */
+
+export const formFieldsProjection = `{
+  "slug": slug.current,
+  title,
+  internalName,
+  active,
+  introTitle,
+  introText,
+  successTitle,
+  successText,
+  submitLabel,
+  "questions": questions[] ${formQuestionProjection},
+  "seo": seo ${seoProjection}
+}`;
+
+export const formBySlugQuery = `
+  *[_type == "form" && slug.current == $slug && active == true][0] ${formFieldsProjection}
+`;
+
+/** ---------- Galería V2 ---------- */
+
+export const galleryItemFieldsProjection = `{
+  title,
+  "media": media ${media2Projection},
+  category,
+  caption,
+  featured,
+  order
+}`;
+
+/** Pasa $category para filtrar (ej. "empresas"), o null para todas las categorías. */
+export const galleryItemsQuery = `
+  *[_type == "galleryItem" && (!defined($category) || category == $category)] | order(order asc) ${galleryItemFieldsProjection}
 `;

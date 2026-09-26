@@ -21,6 +21,7 @@ export default defineType({
   groups: [
     { name: "content", title: "Contenido", default: true },
     { name: "gallery", title: "Galería" },
+    { name: "related", title: "Relacionadas" },
     { name: "impact", title: "Impacto" },
     { name: "seo", title: "SEO" },
   ],
@@ -104,6 +105,13 @@ export default defineType({
       group: "content",
     }),
     defineField({
+      name: "heroMobileMedia",
+      title: "Imagen/vídeo de portada para móvil (opcional, V2)",
+      type: "media",
+      description: "Sustituye a heroMedia en pantallas estrechas. Si se deja vacío, se usa heroMedia.",
+      group: "content",
+    }),
+    defineField({
       name: "headline",
       title: "Titular de la sección de experiencia en la home",
       type: "string",
@@ -139,6 +147,49 @@ export default defineType({
       group: "gallery",
     }),
     defineField({
+      name: "featureSections",
+      title: "Secciones narrativas (V2)",
+      description:
+        "Bloques visuales grandes tipo 'Qué puedes hacer aquí' (conceptos) o 'Una jornada a vuestra manera' (relato paso a paso). No es una agenda rígida: es storytelling editable desde Sanity.",
+      type: "array",
+      of: [{ type: "featureItem" }, { type: "timelineItem" }],
+      group: "content",
+    }),
+    defineField({
+      name: "spacesGallery",
+      title: "Galería de espacios (V2)",
+      description: "Galería editorial de 'Espacios' con pie de foto opcional por imagen/vídeo.",
+      type: "array",
+      of: [
+        {
+          type: "object",
+          name: "spaceItem",
+          fields: [
+            defineField({ name: "media", title: "Imagen o vídeo", type: "media", validation: (Rule) => Rule.required() }),
+            defineField({ name: "caption", title: "Pie de foto (opcional)", type: "string" }),
+          ],
+          preview: { select: { title: "caption", media: "media.image" } },
+        },
+      ],
+      group: "gallery",
+    }),
+    defineField({
+      name: "relatedExperiences",
+      title: "Quizá también te interese (V2)",
+      description: "Otras puertas relacionadas, mostradas al final de la página.",
+      type: "array",
+      of: [{ type: "relatedExperience" }],
+      group: "related",
+    }),
+    defineField({
+      name: "primaryForm",
+      title: "Formulario principal (V2)",
+      description: "Formulario que abren los CTA de esta puerta (ej. FORM EMPRESAS para /empresas).",
+      type: "reference",
+      to: [{ type: "form" }],
+      group: "content",
+    }),
+    defineField({
       name: "ctaLabel",
       title: "Texto del botón de contacto",
       type: "string",
@@ -156,6 +207,21 @@ export default defineType({
       title: "Aportación PLASTY",
       type: "plastyContribution",
       description: "Cifras reales confirmadas en el Documento Fundacional. No inventar ni redondear.",
+      group: "impact",
+    }),
+    defineField({
+      name: "plastyContributionEnabled",
+      title: "Mostrar aportación PLASTY (V2)",
+      description: "Desactivado por defecto para Pickleball: la matrícula-escuela ya no existe y aún no hay un modelo nuevo definido. No actives esto para Pickleball sin una cifra confirmada.",
+      type: "boolean",
+      initialValue: true,
+      group: "impact",
+    }),
+    defineField({
+      name: "plastyContributionText",
+      title: "Texto de la aportación PLASTY (V2)",
+      description: "Texto libre a mostrar cuando plastyContributionEnabled está activo, ej. '30 kg por jornada'.",
+      type: "string",
       group: "impact",
     }),
     defineField({ name: "seo", title: "SEO", type: "seoFields", group: "seo" }),
