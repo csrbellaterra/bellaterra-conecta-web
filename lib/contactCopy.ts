@@ -69,7 +69,7 @@ export const CONTACT_INTENT_OPTIONS: ContactIntent[] = [
   {
     id: "otra-cosa",
     title: "Otra cosa",
-    description: "Cualquier otra consulta que no encaje en las opciones anteriores.",
+    description: "Tengo otra consulta.",
     url: "/solicitud/general?ctaSource=contacto-general",
     order: 7,
     enabled: true,

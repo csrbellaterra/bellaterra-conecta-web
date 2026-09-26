@@ -312,7 +312,7 @@ export const contactPageQuery = `
     heroEyebrow,
     heroHeadline,
     heroBody,
-    "intents": intents[] | order(order asc){
+    "intents": intents[]{
       id,
       title,
       description,

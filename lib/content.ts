@@ -75,35 +75,80 @@ export async function getSiteSettings(preview = false): Promise<SiteSettings> {
 }
 
 /**
+ * Orden conceptual fijo de las 5 puertas en "Cinco puertas, un impacto
+ * compartido" — independiente del orden en que Sanity devuelva
+ * `doorImpact[]` (que depende del orden de filas en Studio, y puede
+ * tener huecos, duplicados o referencias rotas). `mergeDoorImpact`
+ * SIEMPRE recorre esta lista, nunca el array crudo de Sanity, así que
+ * el número de filas resultante es SIEMPRE 5 — ninguna puerta puede
+ * "desaparecer" porque falte, esté duplicada o mal referenciada en
+ * Sanity.
+ */
+const CANONICAL_DOOR_ORDER: DoorId[] = ["eventos", "empresas", "estancias", "comunidad", "pickleball"];
+
+/**
  * Combina el `doorImpact[]` de Sanity con el de seed-data.ts PUERTA A
- * PUERTA (no documento-a-documento ni array-a-array): si el editor
- * solo ha rellenado el texto de referencia de Eventos en Sanity, las
- * otras cuatro puertas (Empresas, Estancias, Comunidad, Pickleball)
- * siguen mostrando su texto de referencia de respaldo, en vez de
- * desaparecer solo porque el array de Sanity no está completo.
- * Recorre el orden de seedItems (las 5 puertas conocidas) y añade al
- * final cualquier puerta que solo exista en Sanity.
+ * PUERTA, indexando por `door` (el slug/id de la referencia, que es la
+ * clave estable) y recorriendo SIEMPRE CANONICAL_DOOR_ORDER, no el
+ * array de Sanity ni el de seedItems: así, si el editor solo ha
+ * rellenado el texto de referencia de Eventos en Sanity, las otras
+ * cuatro puertas siguen mostrando su texto de respaldo, y si falta o
+ * está duplicada/rota la fila de una puerta en Sanity, esa puerta cae
+ * al fallback en vez de desaparecer de la sección.
+ *
+ * Items de Sanity cuyo `door` no sea una de las 5 puertas conocidas
+ * (referencia rota, sin resolver, o duplicada) se IGNORAN — nunca se
+ * añaden como fila extra "fantasma": el número de filas es siempre 5,
+ * ni más ni menos. Si hay duplicados para la misma puerta, se usa el
+ * último elemento del array (comportamiento determinista).
+ *
+ * Pickleball es un caso especial de negocio, no de datos ausentes:
+ * todavía no existe un modelo de contribución PLASTY para Pickleball
+ * (ver CLAUDE.md), así que contributions/kg/percentage se fuerzan
+ * SIEMPRE a `undefined` para esa puerta, aunque alguien los rellene
+ * por error en Sanity — nunca debe insinuar una cifra cuantitativa.
+ * Solo puede mostrar `contributionText` si alguien lo ha configurado
+ * explícitamente (Sanity o fallback) Y `enabled` es true — nunca se
+ * inventa ese texto aquí.
  */
 function mergeDoorImpact(sanityItems: DoorImpactItem[] | undefined, seedItems: DoorImpactItem[]): DoorImpactItem[] {
-  const sanityByDoor = new Map((sanityItems ?? []).map((item) => [item.door, item]));
+  const sanityByDoor = new Map<DoorId, DoorImpactItem>();
+  for (const item of sanityItems ?? []) {
+    if (!item?.door) continue; // referencia de puerta sin resolver — se ignora, nunca genera una fila fantasma
+    if (!CANONICAL_DOOR_ORDER.includes(item.door)) continue; // solo las 5 puertas conocidas
+    sanityByDoor.set(item.door, item); // duplicados: se queda con el último
+  }
+  const seedByDoor = new Map(seedItems.map((item) => [item.door, item]));
 
-  const merged = seedItems.map((seedItem) => {
-    const sanityItem = sanityByDoor.get(seedItem.door);
-    if (!sanityItem) return seedItem;
-    sanityByDoor.delete(seedItem.door);
+  return CANONICAL_DOOR_ORDER.map((door) => {
+    const seedItem = seedByDoor.get(door);
+    const sanityItem = sanityByDoor.get(door);
+    const doorName = sanityItem?.doorName || seedItem?.doorName || door;
+    const enabled = sanityItem?.enabled ?? seedItem?.enabled ?? false;
+    const contributionText = sanityItem?.contributionText || seedItem?.contributionText;
+
+    if (door === "pickleball") {
+      // MEDIDA TEMPORAL: Pickleball todavía no tiene modelo de
+      // contribución PLASTY definido (ver CLAUDE.md → Content policy).
+      // Mientras eso no cambie, contributions/kg/percentage se fuerzan
+      // aquí a `undefined` pase lo que pase en Sanity, para que nunca
+      // se insinúe una cifra cuantitativa que no existe. En cuanto
+      // Bellaterra Conecta defina el nuevo modelo, este caso especial
+      // debe eliminarse y Pickleball debe volver a tratarse como
+      // cualquier otra puerta (bloque `return` de abajo).
+      return { door, doorName, enabled, contributionText, contributions: undefined, kg: undefined, percentage: undefined };
+    }
+
     return {
-      door: seedItem.door,
-      doorName: sanityItem.doorName || seedItem.doorName,
-      enabled: sanityItem.enabled ?? seedItem.enabled,
-      contributionText: sanityItem.contributionText || seedItem.contributionText,
-      contributions: sanityItem.contributions ?? seedItem.contributions,
-      kg: sanityItem.kg ?? seedItem.kg,
-      percentage: sanityItem.percentage ?? seedItem.percentage,
+      door,
+      doorName,
+      enabled,
+      contributionText,
+      contributions: sanityItem?.contributions ?? seedItem?.contributions,
+      kg: sanityItem?.kg ?? seedItem?.kg,
+      percentage: sanityItem?.percentage ?? seedItem?.percentage,
     };
   });
-
-  // Puertas que solo existen en Sanity (no en el fallback conocido) — se añaden tal cual, sin inventar nada.
-  return [...merged, ...sanityByDoor.values()];
 }
 
 /**
@@ -175,6 +220,50 @@ export async function getStoryPage(preview = false): Promise<StoryPage> {
 }
 
 /**
+ * Combina las intenciones del router de /contacto (Sanity ×
+ * lib/contactCopy.ts) POR `id`, no documento-a-documento: antes, si
+ * Sanity ya tenía 6 de las 7 intenciones cargadas (ej. faltaba "Otra
+ * cosa"), `data.intents.length > 0` era true y se usaban SOLO esas 6,
+ * descartando por completo la 7ª del fallback. Ahora cada intención
+ * conocida del fallback (empresas/eventos/estancias/comunidad/
+ * pickleball/visita/otra-cosa) se combina con su equivalente de
+ * Sanity si existe (campo a campo, Sanity gana), y si Sanity no tiene
+ * ninguna entrada para ese id, se usa el fallback completo para esa
+ * fila — así "Otra cosa" (o cualquier otra) nunca puede faltar solo
+ * porque el editor no la haya cargado (o dejado a medias) en Sanity
+ * todavía. Intenciones que solo existen en Sanity (ids nuevos, no
+ * presentes en el fallback) se añaden tal cual al final, sin
+ * inventar nada.
+ */
+function mergeContactIntents(sanityIntents: ContactPage["intents"], fallbackIntents: ContactPage["intents"]): ContactPage["intents"] {
+  const fallback = fallbackIntents ?? [];
+  const sanityById = new Map<string, NonNullable<ContactPage["intents"]>[number]>();
+  for (const intent of sanityIntents ?? []) {
+    if (!intent?.id) continue;
+    sanityById.set(intent.id, intent); // duplicados: se queda con el último
+  }
+
+  const seenIds = new Set<string>();
+  const merged = fallback.map((fallbackIntent) => {
+    seenIds.add(fallbackIntent.id);
+    const sanityIntent = sanityById.get(fallbackIntent.id);
+    if (!sanityIntent) return fallbackIntent;
+    return {
+      id: fallbackIntent.id,
+      title: sanityIntent.title || fallbackIntent.title,
+      description: sanityIntent.description || fallbackIntent.description,
+      url: sanityIntent.url || fallbackIntent.url,
+      order: sanityIntent.order ?? fallbackIntent.order,
+      enabled: sanityIntent.enabled ?? fallbackIntent.enabled,
+      icon: sanityIntent.icon || fallbackIntent.icon,
+    };
+  });
+
+  const extra = [...sanityById.entries()].filter(([id]) => !seenIds.has(id)).map(([, intent]) => intent);
+  return [...merged, ...extra];
+}
+
+/**
  * /contacto — documento único, ver types/content.ts → ContactPage.
  * Prioridad Sanity → fallback CAMPO A CAMPO (mismo motivo y mismo
  * patrón que getImpactSettings): si `contactPage` ya existe en Sanity
@@ -182,10 +271,8 @@ export async function getStoryPage(preview = false): Promise<StoryPage> {
  * `data ?? seedContactPage` descartaría el fallback entero solo porque
  * el documento existe, dejando esos textos vacíos. Ahora cada campo
  * escalar cae a lib/contactCopy.ts (vía seedContactPage) si Sanity no
- * lo tiene definido. `intents` es la única excepción: se resuelve
- * documento-a-documento (si Sanity ya tiene alguna intención cargada,
- * se usan solo esas, sin mezclar con el fallback) para que desactivar
- * u ordenar intenciones desde Sanity sea predecible.
+ * lo tiene definido. `intents` se combina POR ID (ver
+ * mergeContactIntents), no documento-a-documento, por el mismo motivo.
  */
 export async function getContactPage(preview = false): Promise<ContactPage> {
   if (!isSanityConfigured) return seedContactPage;
@@ -196,7 +283,7 @@ export async function getContactPage(preview = false): Promise<ContactPage> {
     heroEyebrow: data.heroEyebrow || seedContactPage.heroEyebrow,
     heroHeadline: data.heroHeadline || seedContactPage.heroHeadline,
     heroBody: data.heroBody || seedContactPage.heroBody,
-    intents: data.intents && data.intents.length > 0 ? data.intents : seedContactPage.intents,
+    intents: mergeContactIntents(data.intents, seedContactPage.intents),
     locationText: data.locationText || seedContactPage.locationText,
     email: data.email || seedContactPage.email,
     instagramUrl: data.instagramUrl || seedContactPage.instagramUrl,
