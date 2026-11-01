@@ -3,39 +3,33 @@ import { draftMode } from "next/headers";
 import { getAllDoors, getHomePage, getImpactSettings } from "@/lib/content";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import HeroSection from "@/components/sections/HeroSection";
-import DoorSelectorSection from "@/components/sections/DoorSelectorSection";
-import HomeExperienceSection from "@/components/sections/HomeExperienceSection";
+import HomeHero from "@/components/sections/home/HomeHero";
+import HomePortals from "@/components/sections/home/HomePortals";
+import HomeIdentity from "@/components/sections/home/HomeIdentity";
 import PlastySection from "@/components/sections/PlastySection";
 import HomeFinalCta from "@/components/sections/HomeFinalCta";
-import Container from "@/components/ui/Container";
-import Media from "@/components/ui/Media";
-import AnimatedIn from "@/components/ui/AnimatedIn";
-import { HOME_CONNECTION_COPY } from "@/lib/homeCopy";
+import { HOME_V2_COPY, v2Copy } from "@/lib/homeCopy";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { isEnabled: preview } = draftMode();
   const home = await getHomePage(preview);
   return {
-    title: home.seo.title,
-    description: home.seo.description,
+    title: { absolute: v2Copy(home.seo.title, HOME_V2_COPY.seoTitle) },
+    description: v2Copy(home.seo.description, HOME_V2_COPY.seoDescription),
   };
 }
 
 /**
- * Home page (V2): hero → selector de 5 puertas (filas accionables) →
- * 5 secciones editoriales alternadas (una por puerta, 01–05) →
- * sección de conexión → sección PLASTY (NO es una sexta puerta) →
- * CTA final → footer.
+ * Home V2 (decisión definitiva 31/10/2026): hero con vídeo de fondo →
+ * cuatro portales visuales (Empresas, Eventos, Estancias, Comunidad) →
+ * cierre de identidad → PLASTY → CTA general de contacto → footer.
  *
- * El copy editorial de la Home (selector, las 5 puertas, conexión,
- * PLASTY, CTA final) se lee de Sanity (homePage.*, door.home*) — ver
- * sanity/schemaTypes/documents/homePage.ts y door.ts. lib/homeCopy.ts
- * solo se usa como FALLBACK mientras esos campos estén vacíos en
- * documentos ya publicados; en cuanto se rellenan desde el Studio,
- * ese valor prevalece siempre. Toda la media (home.hero.media,
- * home.connectionSection.media, door.heroMedia/homeMedia) es 100%
- * editable desde Sanity.
+ * Las secciones largas por puerta (HomeExperienceSection) y el bloque
+ * "Conexión" con media ya no se montan aquí: ese contenido pertenece a
+ * cada página de experiencia. Los componentes se conservan.
+ *
+ * Todo el copy y la media siguen saliendo de Sanity (homePage, door);
+ * lib/homeCopy.ts solo aporta fallbacks V2 (ver v2Copy).
  */
 export default async function HomePage() {
   const { isEnabled: preview } = draftMode();
@@ -45,48 +39,22 @@ export default async function HomePage() {
     getImpactSettings(preview),
   ]);
 
-  const sortedDoors = [...doors].sort((a, b) => a.order - b.order);
-  const connectionEyebrow = home.connectionEyebrow;
-  const connectionHeadline = home.connectionHeadline || home.connectionSection.heading || HOME_CONNECTION_COPY.heading;
-
   return (
     <>
       <Header variant="transparent" />
       <main>
-        <HeroSection block={home.hero} priority />
+        <HomeHero block={home.hero} />
 
-        <DoorSelectorSection
-          doors={sortedDoors}
+        <HomePortals
+          doors={doors}
           heading={home.selectorHeading}
           introduction={home.selectorIntroduction || home.selectorSubheading}
         />
 
-        {sortedDoors.map((door, index) => (
-          <HomeExperienceSection key={door.id} door={door} index={index} />
-        ))}
-
-        {/*
-          Bloque "Conexión" (sección 11): pausa visual entre las cinco
-          experiencias y PLASTY — media amplia protagonista, nunca un
-          recorte pequeño, para que sienta que conecta ambos bloques.
-        */}
-        <section className="bg-surface py-16 sm:py-24 lg:py-28">
-          <Container className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-16">
-            <AnimatedIn className="relative aspect-[4/3] w-full overflow-hidden rounded-card sm:aspect-[16/11] lg:order-2 lg:aspect-[4/3] lg:h-[480px]">
-              <Media media={home.connectionSection.media} alt="Vista aérea de la finca" />
-            </AnimatedIn>
-            <AnimatedIn className="lg:order-1" delay={0.1}>
-              {connectionEyebrow ? (
-                <span className="mb-3 block font-sans text-xs uppercase tracking-[0.25em] text-olive">
-                  {connectionEyebrow}
-                </span>
-              ) : null}
-              <h2 className="whitespace-pre-line font-serif text-3xl leading-tight text-text sm:text-4xl lg:text-[2.5rem]">
-                {connectionHeadline}
-              </h2>
-            </AnimatedIn>
-          </Container>
-        </section>
+        <HomeIdentity
+          eyebrow={home.connectionEyebrow}
+          headline={v2Copy(home.connectionHeadline || home.connectionSection.heading, HOME_V2_COPY.identityHeadline)}
+        />
 
         <PlastySection home={home} impact={impact} />
 

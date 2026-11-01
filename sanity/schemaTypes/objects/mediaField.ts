@@ -48,6 +48,42 @@ export default defineType({
       hidden: ({ parent }) => parent?.type !== "externalVideo",
     }),
     defineField({
+      name: "externalVideoUrlAv1",
+      title: "URL de vídeo externo en AV1 (opcional)",
+      type: "url",
+      description:
+        "Versión AV1 del mismo vídeo (más ligera). Los navegadores que la soportan la usan; el resto usa la URL anterior (H.264).",
+      hidden: ({ parent }) => parent?.type !== "externalVideo",
+    }),
+    defineField({
+      name: "mobileExternalVideoUrl",
+      title: "URL de vídeo externo para móvil (H.264, opcional)",
+      type: "url",
+      description: "Vídeo vertical para pantallas estrechas. Si se deja vacío, se usa el vídeo principal.",
+      hidden: ({ parent }) => parent?.type !== "externalVideo",
+    }),
+    defineField({
+      name: "mobileExternalVideoUrlAv1",
+      title: "URL de vídeo externo para móvil en AV1 (opcional)",
+      type: "url",
+      hidden: ({ parent }) => parent?.type !== "externalVideo",
+    }),
+    defineField({
+      name: "mobileVideoFit",
+      title: "Encaje del vídeo en móvil",
+      type: "string",
+      description:
+        "«Completo» muestra el vídeo vertical entero sobre el color tinta, sin recortarlo (para vídeos montados con bandas, como el de la Home).",
+      options: {
+        list: [
+          { title: "Rellenar la pantalla (recorta los lados)", value: "cover" },
+          { title: "Completo, sin recortar", value: "contain" },
+        ],
+        layout: "radio",
+      },
+      hidden: ({ parent }) => parent?.type === "image",
+    }),
+    defineField({
       name: "poster",
       title: "Imagen de portada del vídeo (poster)",
       type: "imageWithAlt",

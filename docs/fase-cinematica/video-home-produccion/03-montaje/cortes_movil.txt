@@ -1,0 +1,17 @@
+# Móvil v3 (01/11/2026): mismo orden, tramos, transiciones, fuentes y realce que cortes_final.txt
+# (montaje desktop aprobado). Solo cambia focoX: el centro de la ventana móvil 4:3
+# (MOVIL_MODO=ventana VENTANA=4/3), que enseña el 75 % del ancho del plano sobre bandas lisas.
+# n  archivo                          entrada dur  trans focoX fuente                                realce
+01   01_entrada-camino_v1.mp4.mp4     0.8     2.5  0     0.60  -                                     0.5
+02   02_entrada-arbol_v1.mp4.mp4      0.8     2.0  0.4   0.55  -                                     0.5
+03   03_piscina-ramas_v1.mp4.mp4      2.0     2.0  0     0.55  -                                     0.5
+04   04_piscina-barbacoa_v1.mp4.mp4   1.0     2.0  0.3   0.48  -                                     0.5
+05   05_piscina-ras-agua_v1.mp4.mp4   1.0     1.5  0.4   0.40  -                                     0.5
+06   06_fachada-trasera_v1.mp4.mp4    1.0     2.0  0     0.40  -                                     0.5
+07   07_porche-comedor_v1.mp4         1.0     2.0  0     0.42  upscale/07_porche-comedor_v1_4k.mp4   0
+08   08_terraza-pistas_v1.mp4         1.0     2.0  0.4   0.55  -                                     0.5
+09   09_jardin-vistas_v1.mp4          1.0     2.5  0.4   0.45  -                                     0.5
+10   10_terraza-toldo_v1.mp4          1.0     1.5  0     0.62  upscale/10_terraza-toldo_v1_4k.mp4    0
+11   11_terraza-chillout_v1.mp4       1.0     2.0  0.4   0.40  upscale/11_terraza-chillout_v1_4k.mp4 0
+12   12_pistas-casa_v1.mp4            0.5     2.0  0     0.55  -                                     0.5
+13   13_pistas-horizonte_v1.mp4       1.0     3.0  0.8   0.45  -                                     0.5

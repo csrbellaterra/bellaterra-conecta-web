@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Carpeta de compilación configurable (por defecto .next) para poder
+  // ejecutar una verificación o un build sin pisar el .next de un
+  // `next dev` en marcha: NEXT_DIST_DIR=.next-verify pnpm build
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   images: {
     remotePatterns: [
       {

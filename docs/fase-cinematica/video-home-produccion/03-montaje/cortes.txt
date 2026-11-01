@@ -1,0 +1,29 @@
+# Lista de cortes del vídeo de Home. La lee montar_home.sh.
+# Una línea por plano, en orden narrativo. Columnas separadas por espacios:
+#   n        número de plano
+#   archivo  clip en 02-clips-runway/ (nombre exacto, sin espacios)
+#   entrada  segundo del clip donde empieza el tramo útil
+#   dur      segundos que el plano ocupa en el montaje
+#   trans    fundido de salida hacia el plano siguiente, en segundos (0 = corte seco)
+#   focoX    centro horizontal del recorte vertical para móvil (0 = izquierda, 1 = derecha)
+# La "trans" de la última línea es el fundido del bucle (13 → 01).
+# Duración total del vídeo = suma de la columna dur.
+# Cada tramo usa entrada + dur + trans segundos del clip: no debe pasar de 5 s.
+#
+# Montaje completo v1 (31/10/2026). 13 clips v1 aprobados, con su nombre real (ver 03-montaje/REVISION_07-13.md).
+# 05 restaurada por decisión del usuario (31/10/2026); 04 → 05 con fundido sutil de 0,3 s por el cambio de tono del agua.
+# 12: solo 0,5–2,5 s (a partir de ~3,3 s inventa una construcción en el borde izquierdo). Total: 27,0 s.
+# n  archivo                          entrada dur  trans focoX
+01   01_entrada-camino_v1.mp4.mp4     0.8     2.5  0     0.70
+02   02_entrada-arbol_v1.mp4.mp4      0.8     2.0  0.4   0.58
+03   03_piscina-ramas_v1.mp4.mp4      2.0     2.0  0     0.55
+04   04_piscina-barbacoa_v1.mp4.mp4   1.0     2.0  0.3   0.38
+05   05_piscina-ras-agua_v1.mp4.mp4   1.0     1.5  0.4   0.40
+06   06_fachada-trasera_v1.mp4.mp4    1.0     2.0  0     0.42
+07   07_porche-comedor_v1.mp4         1.0     2.0  0     0.50
+08   08_terraza-pistas_v1.mp4         1.0     2.0  0.4   0.55
+09   09_jardin-vistas_v1.mp4          1.0     2.5  0.4   0.50
+10   10_terraza-toldo_v1.mp4          1.0     1.5  0     0.55
+11   11_terraza-chillout_v1.mp4       1.0     2.0  0.4   0.45
+12   12_pistas-casa_v1.mp4            0.5     2.0  0     0.50
+13   13_pistas-horizonte_v1.mp4       1.0     3.0  0.8   0.45

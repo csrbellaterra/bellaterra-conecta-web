@@ -10,7 +10,7 @@ const CLOSE_DELAY_MS = 150;
 /**
  * Desplegable "Experiencias" del header de escritorio (Fase 7A,
  * secciones 3 y corrección posterior). Lista sencilla y elegante,
- * numerada (01 Empresas … 05 Pickleball) — nunca un mega-menu.
+ * numerada (01 Empresas … 04 Comunidad) — nunca un mega-menu.
  *
  * Se abre con click (siempre) y, además, con hover — pero SOLO en
  * dispositivos que de verdad soportan hover con puntero fino
@@ -120,7 +120,7 @@ export default function ExperiencesDropdown({
         onFocus={() => setOpen(true)}
         className={cn(
           "flex items-center gap-1.5 font-sans text-[13px] uppercase tracking-[0.12em] transition-colors",
-          showSolidChrome ? "text-muted hover:text-text" : "text-white/85 hover:text-white"
+          showSolidChrome ? "text-muted hover:text-text" : "text-white/90 hover:text-white [text-shadow:0_1px_12px_rgba(20,19,15,0.5)]"
         )}
       >
         {label}

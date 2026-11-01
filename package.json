@@ -21,6 +21,7 @@
     "sanity:ensure-contact-intents": "tsx scripts/ensure-contact-intents.ts",
     "sanity:backfill-form-questions": "tsx scripts/backfill-form-questions.ts",
     "sanity:align-forms-v2": "tsx scripts/align-forms-v2.ts",
+    "sanity:align-home-v2": "tsx scripts/align-home-v2.ts",
     "airtable:check": "tsx scripts/airtable-check.ts"
   },
   "dependencies": {

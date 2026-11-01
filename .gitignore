@@ -6,6 +6,8 @@
 
 # Next.js
 /.next/
+/.next-verify/
+/.next-*/
 /out/
 next-env.d.ts
 
@@ -37,3 +39,10 @@ pnpm-debug.log*
 
 # TypeScript
 *.tsbuildinfo
+
+# Experimento scroll: derivados multimedia generados localmente (no versionar)
+/public/experimento-scroll-media/
+
+# Vídeo de la Home: copias locales para probar en localhost (en producción se sirven
+# desde almacenamiento externo; ver docs/fase-cinematica/VIDEO_HOME_INTEGRACION.md)
+/public/videos/

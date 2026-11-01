@@ -1,4 +1,6 @@
-import { createClient } from "next-sanity";
+// Directo desde @sanity/client: el barrel "next-sanity" arrastraba a todas las páginas
+// su código de cliente (Visual Editing / Live), unos 58 kB gzip que no usamos.
+import { createClient } from "@sanity/client";
 import { apiVersion, dataset, projectId } from "./env";
 
 // Cliente para lecturas públicas (contenido publicado). useCdn=true en

@@ -8,14 +8,21 @@ import "./globals.css";
  * "transparent" en la home y "solid" en el resto de páginas), y así
  * /studio (Sanity Studio) tampoco hereda ninguna cabecera del sitio.
  */
+/**
+ * ISR: las páginas (y las consultas a Sanity, que heredan este valor)
+ * se regeneran como mucho cada 60 s, así que lo que el equipo publica en
+ * Sanity aparece sin redeploy y la web sigue sirviéndose estática.
+ */
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   title: {
-    default: "Bellaterra Conecta — Una finca. Cinco formas de vivirla.",
+    default: "Bellaterra Conecta — Una finca. Cuatro formas de vivirla.",
     template: "%s — Bellaterra Conecta",
   },
   description:
-    "Finca en Bellaterra, Barcelona, para empresas, eventos, estancias, comunidad y pickleball.",
+    "Finca en Bellaterra, Barcelona, para empresas, eventos, estancias y comunidad.",
   openGraph: {
     type: "website",
     locale: "es_ES",

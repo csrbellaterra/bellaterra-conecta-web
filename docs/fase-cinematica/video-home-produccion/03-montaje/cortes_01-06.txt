@@ -1,0 +1,9 @@
+# Montaje parcial 01–06 (31/10/2026). Nombres reales de los clips (Runway añadió doble extensión).
+# 04, 05 y 06: clips v1 aprobados (ver REVISION_04-06.md). La "trans" de la 06 es el fundido de bucle 06 → 01 solo para esta prueba.
+# n  archivo                          entrada dur  trans focoX
+01   01_entrada-camino_v1.mp4.mp4     0.8     2.5  0     0.70
+02   02_entrada-arbol_v1.mp4.mp4      0.8     2.0  0.4   0.58
+03   03_piscina-ramas_v1.mp4.mp4      2.0     2.0  0     0.55
+04   04_piscina-barbacoa_v1.mp4.mp4   1.0     2.0  0     0.55
+05   05_piscina-ras-agua_v1.mp4.mp4   1.0     1.5  0.4   0.40
+06   06_fachada-trasera_v1.mp4.mp4    1.0     2.0  0.8   0.42

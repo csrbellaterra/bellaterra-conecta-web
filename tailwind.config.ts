@@ -4,19 +4,27 @@ import type { Config } from "tailwindcss";
 // cálido, blanco roto, oliva oscuro/natural, negro cálido. Nada de
 // verdes brillantes ni iconografía "eco" — PLASTY se comunica con la
 // misma paleta editorial que el resto del sitio.
+const withAlpha = (variable: string) =>
+  `color-mix(in srgb, var(${variable}) calc(<alpha-value> * 100%), transparent)`;
+
 const config: Config = {
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      // Con `withAlpha` los modificadores de opacidad (bg-ink/40,
+      // from-ink/70, bg-background/95…) funcionan sobre las variables
+      // CSS. Con "var(--color-x)" a secas Tailwind no generaba esas
+      // clases y velos, degradados y header con scroll fallaban en
+      // silencio.
       colors: {
-        background: "var(--color-background)",
-        surface: "var(--color-surface)",
-        text: "var(--color-text)",
-        muted: "var(--color-muted)",
-        olive: "var(--color-olive)",
-        "olive-dark": "var(--color-olive-dark)",
-        border: "var(--color-border)",
-        ink: "var(--color-ink)",
+        background: withAlpha("--color-background"),
+        surface: withAlpha("--color-surface"),
+        text: withAlpha("--color-text"),
+        muted: withAlpha("--color-muted"),
+        olive: withAlpha("--color-olive"),
+        "olive-dark": withAlpha("--color-olive-dark"),
+        border: withAlpha("--color-border"),
+        ink: withAlpha("--color-ink"),
       },
       fontFamily: {
         serif: ["var(--font-serif)"],

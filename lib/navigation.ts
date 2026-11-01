@@ -1,10 +1,11 @@
 import type { DoorId } from "@/types/content";
 
 /**
- * Estructura de navegación V2 (sección 6 del prompt de rediseño):
+ * Estructura de navegación V2 (decisión definitiva 31/10/2026):
  * Bellaterra Conecta | Experiencias ▾ (Empresas/Eventos/Estancias/
- * Comunidad/Pickleball) | Nuestra historia | Impacto | Galería |
- * Contacto.
+ * Comunidad) | Reservar pista | Nuestra historia | Impacto | Galería |
+ * Contacto. Pickleball ya no es una experiencia del menú; /pickleball
+ * sigue existiendo pero no se enlaza desde la navegación principal.
  *
  * Este módulo es solo la fuente de verdad de las rutas/etiquetas —
  * no sustituye a siteSettings.navigation (fuente actual del Header
@@ -19,7 +20,6 @@ export const EXPERIENCE_LINKS: { label: string; slug: DoorId; url: string }[] = 
   { label: "Eventos", slug: "eventos", url: "/eventos" },
   { label: "Estancias", slug: "estancias", url: "/estancias" },
   { label: "Comunidad", slug: "comunidad", url: "/comunidad" },
-  { label: "Pickleball", slug: "pickleball", url: "/pickleball" },
 ];
 
 /**
@@ -30,6 +30,7 @@ export const EXPERIENCE_LINKS: { label: string; slug: DoorId; url: string }[] = 
  */
 export const MAIN_NAV_LINKS = [
   { label: "Experiencias", url: "/experiencias", children: EXPERIENCE_LINKS },
+  { label: "Reservar pista", url: "/reservar-pista" },
   { label: "Nuestra historia", url: "/nuestra-historia" },
   { label: "Impacto", url: "/impacto" },
   { label: "Galería", url: "/galeria" },
@@ -42,3 +43,13 @@ export const MAIN_NAV_LINKS = [
  * MAIN_NAV_LINKS directamente en componentes de navegación.
  */
 export const VISIBLE_NAV_LINKS = MAIN_NAV_LINKS.filter((link) => !("hidden" in link && link.hidden));
+
+/**
+ * Enlaces del pie (siteSettings.footerLinks, Sanity) adaptados a la V2:
+ * el enlace heredado a /pickleball pasa a ser "Reservar pista". Cuando
+ * se ejecute `pnpm sanity:align-home-v2 --apply` el cambio queda en
+ * Sanity y esta función ya no altera nada.
+ */
+export function v2FooterLinks<T extends { label: string; url: string }>(links: T[]): T[] {
+  return links.map((link) => (link.url === "/pickleball" ? { ...link, label: "Reservar pista", url: "/reservar-pista" } : link));
+}

@@ -1,0 +1,20 @@
+# Montaje definitivo (01/11/2026): mismo orden, tramos y transiciones que el montaje completo v1 (cortes.txt).
+# Columnas: n archivo entrada dur trans focoX fuente realce (ver montar_home.sh).
+#   fuente "-" = clip original de Runway (720p); si no, su upscale 4K de Runway (variante D).
+#   realce 0.5 = Lanczos + CAS suave (variante C); 0 = sin realce (variante D).
+# Variante D aprobada en 07, 10 y 11. En 05 y 06 el 4K se descartó tras la revisión
+# (trama artificial en la vegetación, ver REVISION_UPSCALE_FINAL.md) y van con C, como las otras ocho.
+# n  archivo                          entrada dur  trans focoX fuente                                realce
+01   01_entrada-camino_v1.mp4.mp4     0.8     2.5  0     0.70  -                                     0.5
+02   02_entrada-arbol_v1.mp4.mp4      0.8     2.0  0.4   0.58  -                                     0.5
+03   03_piscina-ramas_v1.mp4.mp4      2.0     2.0  0     0.55  -                                     0.5
+04   04_piscina-barbacoa_v1.mp4.mp4   1.0     2.0  0.3   0.38  -                                     0.5
+05   05_piscina-ras-agua_v1.mp4.mp4   1.0     1.5  0.4   0.40  -                                     0.5
+06   06_fachada-trasera_v1.mp4.mp4    1.0     2.0  0     0.42  -                                     0.5
+07   07_porche-comedor_v1.mp4         1.0     2.0  0     0.50  upscale/07_porche-comedor_v1_4k.mp4   0
+08   08_terraza-pistas_v1.mp4         1.0     2.0  0.4   0.55  -                                     0.5
+09   09_jardin-vistas_v1.mp4          1.0     2.5  0.4   0.50  -                                     0.5
+10   10_terraza-toldo_v1.mp4          1.0     1.5  0     0.55  upscale/10_terraza-toldo_v1_4k.mp4    0
+11   11_terraza-chillout_v1.mp4       1.0     2.0  0.4   0.45  upscale/11_terraza-chillout_v1_4k.mp4 0
+12   12_pistas-casa_v1.mp4            0.5     2.0  0     0.50  -                                     0.5
+13   13_pistas-horizonte_v1.mp4       1.0     3.0  0.8   0.45  -                                     0.5

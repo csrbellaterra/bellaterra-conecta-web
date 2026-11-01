@@ -27,7 +27,11 @@ const mediaProjection = `{
   "mobileImage": mobileImage ${imageProjection},
   "mobileVideoUrl": mobileVideo.asset->url,
   autoplay,
-  loop
+  loop,
+  externalVideoUrlAv1,
+  mobileExternalVideoUrl,
+  mobileExternalVideoUrlAv1,
+  mobileVideoFit
 }`;
 
 const seoProjection = `{

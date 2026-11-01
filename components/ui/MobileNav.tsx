@@ -61,7 +61,7 @@ export default function MobileNav({ dark = false }: { dark?: boolean }) {
   }, [open]);
 
   return (
-    <div className="md:hidden">
+    <div className="lg:hidden">
       <button
         ref={triggerRef}
         type="button"

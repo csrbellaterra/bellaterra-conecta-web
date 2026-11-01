@@ -80,3 +80,56 @@ export const HOME_FINAL_CTA_COPY = {
   ctaLabel: "Escríbenos",
   ctaUrl: "/solicitud/general",
 };
+
+/* ============================================
+   HOME V2 — CUATRO EXPERIENCIAS (decisión definitiva 31/10/2026)
+   ============================================ */
+
+/** Las cuatro puertas principales. Pickleball sigue existiendo como
+ * página (/pickleball) pero ya no es una de las experiencias. */
+export const PRIMARY_DOOR_IDS = ["empresas", "eventos", "estancias", "comunidad"] as const;
+export type PrimaryDoorId = (typeof PRIMARY_DOOR_IDS)[number];
+
+export const HOME_V2_COPY = {
+  heroTitle: "Una finca. Cuatro formas de vivirla.",
+  heroCtaLabel: "Explorar experiencias",
+  heroCtaUrl: "#experiencias",
+  portalsHeading: "¿Qué te gustaría vivir aquí?",
+  portalsIntroduction: "Un mismo lugar. Cuatro experiencias diferentes.",
+  identityHeadline: "Cuatro formas de entrar.\nUn mismo lugar al que volver.",
+  seoTitle: "Bellaterra Conecta — Una finca. Cuatro formas de vivirla.",
+  seoDescription:
+    "Finca en Bellaterra, Barcelona, para empresas, eventos, estancias y comunidad. Cuatro formas de entrar, un mismo lugar al que volver.",
+};
+
+/** Descripción corta de cada portal (fallback de door.eyebrow). */
+export const HOME_PORTAL_COPY: Record<PrimaryDoorId, { description: string }> = {
+  empresas: { description: "Reunirse, trabajar y conectar equipos." },
+  eventos: { description: "Celebrar y compartir momentos especiales." },
+  estancias: { description: "Quedarte y disfrutar la finca." },
+  comunidad: { description: "Participar, conectar y volver." },
+};
+
+/**
+ * Textos que hoy siguen en Sanity con el modelo de CINCO puertas.
+ * Mientras no se ejecute `pnpm sanity:align-home-v2` (que actualiza
+ * esos campos en Sanity, y que solo debe ejecutarse al publicar la
+ * V2 porque la web de producción lee el mismo dataset), la rama V2
+ * los trata como vacíos y usa el copy V2. Cualquier otro valor que se
+ * escriba en Sanity prevalece siempre.
+ */
+const LEGACY_V1_VALUES = new Set([
+  "¿Qué te gustaría hacer aquí?",
+  "Bellaterra Conecta reúne distintas experiencias en una misma finca. Encuentra la que te trae hasta aquí y descubre todo lo demás.",
+  "Descubre la finca",
+  "#selector",
+  "Reunirse, trabajar y conectar",
+  "Celebrar y compartir",
+  "Jornadas abiertas con actividades de deporte, convivencia y participación para descubrir Bellaterra Conecta",
+]);
+
+export function v2Copy(value: string | null | undefined, fallback: string): string {
+  const text = value?.trim();
+  if (!text || /\bcinco\b/i.test(text) || LEGACY_V1_VALUES.has(text)) return fallback;
+  return text;
+}

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getSiteSettings } from "@/lib/content";
 import Container from "@/components/ui/Container";
+import MotionPreferenceToggle from "@/components/ui/MotionPreferenceToggle";
+import { v2FooterLinks } from "@/lib/navigation";
 
 /**
  * Pie de página minimalista, tal y como pide la maqueta: el mensaje
@@ -28,7 +30,7 @@ export default async function Footer() {
 
           <nav aria-label="Enlaces del pie de página">
             <ul className="grid grid-cols-2 gap-x-8 gap-y-2.5 sm:flex sm:flex-wrap sm:gap-x-7 sm:gap-y-2">
-              {settings.footerLinks.map((link) => (
+              {v2FooterLinks(settings.footerLinks).map((link) => (
                 <li key={link.url}>
                   <Link href={link.url} className="font-sans text-sm text-muted transition-colors hover:text-text">
                     {link.label}
@@ -51,6 +53,9 @@ export default async function Footer() {
                 </Link>
               </li>
             ))}
+            <li>
+              <MotionPreferenceToggle />
+            </li>
           </ul>
         </div>
       </Container>

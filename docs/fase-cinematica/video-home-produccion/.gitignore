@@ -1,0 +1,9 @@
+# Multimedia pesado de la producción del vídeo de Home: solo local, nunca en git.
+01-imagenes-runway/*
+02-clips-runway/*
+03-montaje/*
+!*/.gitkeep
+!03-montaje/montar_home.sh
+!03-montaje/cortes*.txt
+!03-montaje/REVISION_*.md
+!03-montaje/comparar_upscale.sh

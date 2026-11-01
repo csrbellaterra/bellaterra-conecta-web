@@ -1,0 +1,6 @@
+# Prueba 01 → 03 (31/10/2026). Clips v1 tal como se descargaron (doble extensión .mp4.mp4).
+# 03 revisado de nuevo el 31/10/2026: aprobado con recorte; se usa el tramo en que las hojas se abren (2,0–4,0 s).
+# n  archivo                           entrada dur  trans focoX
+01   01_entrada-camino_v1.mp4.mp4      0.8     2.5  0     0.70
+02   02_entrada-arbol_v1.mp4.mp4       0.8     2.0  0.4   0.58
+03   03_piscina-ramas_v1.mp4.mp4       2.0     2.0  0     0.55

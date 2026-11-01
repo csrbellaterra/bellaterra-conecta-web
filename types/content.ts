@@ -30,6 +30,14 @@ export type MediaField = {
   mobileVideoUrl?: string;
   autoplay?: boolean;
   loop?: boolean;
+  /** ---------- Vídeo externo por formato (opcional; usado por el hero de la Home) ---------- */
+  /** versión AV1 de externalVideoUrl (que queda como H.264 de respaldo) */
+  externalVideoUrlAv1?: string;
+  /** vídeo externo para móvil: H.264 y AV1 */
+  mobileExternalVideoUrl?: string;
+  mobileExternalVideoUrlAv1?: string;
+  /** cómo encaja el vídeo móvil: "cover" rellena la pantalla; "contain" lo muestra entero sobre tinta */
+  mobileVideoFit?: "cover" | "contain";
 };
 
 export type SeoFields = {

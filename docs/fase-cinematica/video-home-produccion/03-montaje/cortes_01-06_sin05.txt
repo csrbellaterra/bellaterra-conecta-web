@@ -1,0 +1,20 @@
+# Lista de cortes del vídeo de Home. La lee montar_home.sh.
+# Una línea por plano, en orden narrativo. Columnas separadas por espacios:
+#   n        número de plano
+#   archivo  clip en 02-clips-runway/ (nombre exacto, sin espacios)
+#   entrada  segundo del clip donde empieza el tramo útil
+#   dur      segundos que el plano ocupa en el montaje
+#   trans    fundido de salida hacia el plano siguiente, en segundos (0 = corte seco)
+#   focoX    centro horizontal del recorte vertical para móvil (0 = izquierda, 1 = derecha)
+# La "trans" de la última línea es el fundido del bucle (13 → 01).
+# Duración total del vídeo = suma de la columna dur.
+# Cada tramo usa entrada + dur + trans segundos del clip: no debe pasar de 5 s.
+#
+# 01–06: clips v1 aprobados (31/10/2026), con su nombre real. La 05 (piscina turquesa de 2024) se retiró el 31/10/2026: 04 funde con 06.
+# 07–13: nombre previsto; se corrige al nombre real cuando lleguen los clips. Total: 26,0 s.
+# n  archivo                          entrada dur  trans focoX
+01   01_entrada-camino_v1.mp4.mp4     0.8     2.5  0     0.70
+02   02_entrada-arbol_v1.mp4.mp4      0.8     2.0  0.4   0.58
+03   03_piscina-ramas_v1.mp4.mp4      2.0     2.0  0     0.55
+04   04_piscina-barbacoa_v1.mp4.mp4   1.0     2.0  0.4   0.38
+06   06_fachada-trasera_v1.mp4.mp4    1.0     2.5  0.8   0.42
