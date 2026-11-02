@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
+import { useHydratedReducedMotion } from "@/lib/useHydratedReducedMotion";
 import type { MediaField } from "@/types/content";
 import Container from "@/components/ui/Container";
 import Media from "@/components/ui/Media";
@@ -33,7 +34,7 @@ export default function StoryTextMedia({
   parallax?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const shouldReduceMotion = useReducedMotion();
+  const shouldReduceMotion = useHydratedReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], parallax && !shouldReduceMotion ? ["-4%", "4%"] : ["0%", "0%"]);
 

@@ -1,7 +1,9 @@
 import type { Door, Event } from "@/types/content";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import DoorHero from "@/components/sections/door/DoorHero";
+import DoorIntro, { DOOR_INFO_ID } from "@/components/sections/door/DoorIntro";
+import { experienceDoor } from "@/lib/doorExperience";
+import { withApprovedImages, withPortalImages } from "@/lib/approvedMedia";
 import DoorFeatureBlocks from "@/components/sections/door/DoorFeatureBlocks";
 import DoorUpcomingFamilyDays from "@/components/sections/door/DoorUpcomingFamilyDays";
 import DoorSpacesGallery from "@/components/sections/door/DoorSpacesGallery";
@@ -25,24 +27,33 @@ import DoorRelatedExperiences from "@/components/sections/door/DoorRelatedExperi
  * → relacionadas (Pickleball/Eventos).
  */
 export default function DoorPageTemplateComunidad({
-  door,
-  allDoors,
-  upcomingFamilyDays,
+  door: sanityDoor,
+  allDoors: sanityDoors,
+  upcomingFamilyDays: sanityFamilyDays,
 }: {
   door: Door;
   allDoors: Door[];
   upcomingFamilyDays: Event[];
 }) {
+  // Fotos antiguas de Sanity con personas sin autorización: sustituidas (lib/approvedMedia.ts).
+  const door = withApprovedImages(sanityDoor);
+  const allDoors = withPortalImages(sanityDoors);
+  const upcomingFamilyDays = withApprovedImages(sanityFamilyDays);
+  // CTA y foto de cierre V2 (etiquetas heredadas de la V1 y fotos de 2024 fuera).
+  const closingDoor = experienceDoor(door);
   return (
     <>
       <Header variant="transparent" />
       <main>
-        <DoorHero door={door} />
-        <DoorFeatureBlocks door={door} />
-        <DoorUpcomingFamilyDays events={upcomingFamilyDays} />
-        <DoorSpacesGallery door={door} />
-        <DoorFinalCta door={door} />
-        <DoorRelatedExperiences door={door} allDoors={allDoors} />
+        <DoorIntro door={door} />
+        {/* Bloque B: destino de «Saltar introducción». */}
+        <div id={DOOR_INFO_ID} tabIndex={-1} className="scroll-mt-16 outline-none">
+          <DoorFeatureBlocks door={door} />
+          <DoorUpcomingFamilyDays events={upcomingFamilyDays} />
+          <DoorSpacesGallery door={door} />
+        </div>
+        <DoorFinalCta door={closingDoor} />
+        <DoorRelatedExperiences door={closingDoor} allDoors={allDoors} />
       </main>
       <Footer />
     </>

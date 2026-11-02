@@ -3,7 +3,7 @@ import type { DoorId } from "@/types/content";
 /**
  * Estructura de navegación V2 (decisión definitiva 31/10/2026):
  * Bellaterra Conecta | Experiencias ▾ (Empresas/Eventos/Estancias/
- * Comunidad) | Reservar pista | Nuestra historia | Impacto | Galería |
+ * Comunidad) | Reservar Pickleball (/reservar-pista) | Nuestra historia | Impacto | Galería |
  * Contacto. Pickleball ya no es una experiencia del menú; /pickleball
  * sigue existiendo pero no se enlaza desde la navegación principal.
  *
@@ -30,7 +30,7 @@ export const EXPERIENCE_LINKS: { label: string; slug: DoorId; url: string }[] = 
  */
 export const MAIN_NAV_LINKS = [
   { label: "Experiencias", url: "/experiencias", children: EXPERIENCE_LINKS },
-  { label: "Reservar pista", url: "/reservar-pista" },
+  { label: "Reservar Pickleball", url: "/reservar-pista" },
   { label: "Nuestra historia", url: "/nuestra-historia" },
   { label: "Impacto", url: "/impacto" },
   { label: "Galería", url: "/galeria" },
@@ -46,10 +46,10 @@ export const VISIBLE_NAV_LINKS = MAIN_NAV_LINKS.filter((link) => !("hidden" in l
 
 /**
  * Enlaces del pie (siteSettings.footerLinks, Sanity) adaptados a la V2:
- * el enlace heredado a /pickleball pasa a ser "Reservar pista". Cuando
+ * el enlace heredado a /pickleball pasa a ser "Reservar Pickleball". Cuando
  * se ejecute `pnpm sanity:align-home-v2 --apply` el cambio queda en
  * Sanity y esta función ya no altera nada.
  */
 export function v2FooterLinks<T extends { label: string; url: string }>(links: T[]): T[] {
-  return links.map((link) => (link.url === "/pickleball" ? { ...link, label: "Reservar pista", url: "/reservar-pista" } : link));
+  return links.map((link) => (link.url === "/pickleball" ? { ...link, label: "Reservar Pickleball", url: "/reservar-pista" } : link));
 }

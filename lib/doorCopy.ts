@@ -50,10 +50,10 @@ export const DOOR_PAGE_COPY: Record<DoorCopyId, DoorPageCopy> = {
     timeline: {
       title: "Trabajo cuando toca.\nEspacio para conectar cuando importa.",
       items: [
-        { time: "09:30", title: "Llegar y empezar" },
-        { time: "11:00", title: "Workshop" },
-        { time: "14:00", title: "Compartir mesa" },
-        { time: "16:00", title: "Actividad / pickleball" },
+        { time: "09:30", title: "Llegar y empezar", body: "Primera sesión en la sala, con luz natural." },
+        { time: "11:00", title: "Workshop", body: "En interior o en la terraza, por grupos." },
+        { time: "14:00", title: "Compartir mesa", body: "Comida en el comedor o al aire libre." },
+        { time: "16:00", title: "Actividad / pickleball", body: "Pistas, jardín o simplemente conversación." },
       ],
     },
     spaces: { title: "Espacios", itemsFallback: ["Interior", "Terraza", "Jardín", "Comedor", "Piscina", "Pickleball"] },

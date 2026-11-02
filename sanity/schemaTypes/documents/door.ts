@@ -282,6 +282,25 @@ export default defineType({
       group: "content",
     }),
     defineField({
+      name: "cinematicIntro",
+      title: "Introducción cinematográfica (V2)",
+      description:
+        "Recorrido por scroll al abrir la página (3–4 escenas con fotos reales de la finca). Si está apagado o sin escenas, se usa la versión aprobada en código o el hero normal.",
+      type: "object",
+      group: "doorPage",
+      fields: [
+        defineField({ name: "enabled", title: "Activar", type: "boolean", initialValue: false }),
+        defineField({
+          name: "scenes",
+          title: "Escenas",
+          type: "array",
+          of: [{ type: "cinematicScene" }],
+          validation: (Rule) => Rule.max(5),
+        }),
+      ],
+      options: { collapsible: true, collapsed: true },
+    }),
+    defineField({
       name: "spacesGallery",
       title: "Galería de espacios (V2)",
       description: "Galería editorial de 'Espacios' con pie de foto opcional por imagen/vídeo.",

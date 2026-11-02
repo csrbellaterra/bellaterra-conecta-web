@@ -1,15 +1,23 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import type { ReactNode } from "react";
+import { useHydratedReducedMotion } from "@/lib/useHydratedReducedMotion";
 
 /**
  * Animación de entrada del hero al cargar la página (no al hacer
  * scroll, a diferencia de AnimatedIn — el hero ya está a la vista
  * desde el primer momento). Fundido + ligero desplazamiento vertical,
  * muy sutil, con `delay` para escalonar título/subtítulo/ubicación.
- * Respeta prefers-reduced-motion.
+ * Respeta prefers-reduced-motion (aparece al instante) sin cambiar de
+ * elemento entre servidor e hidratación (ver useHydratedReducedMotion).
  */
+const variants: Variants = {
+  hidden: { opacity: 0, y: 18 },
+  visible: { opacity: 1, y: 0 },
+  instant: { opacity: 1, y: 0, transition: { duration: 0 } },
+};
+
 export default function HeroReveal({
   children,
   delay = 0,
@@ -19,17 +27,14 @@ export default function HeroReveal({
   delay?: number;
   className?: string;
 }) {
-  const shouldReduceMotion = useReducedMotion();
-
-  if (shouldReduceMotion) {
-    return <div className={className}>{children}</div>;
-  }
+  const shouldReduceMotion = useHydratedReducedMotion();
 
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 18 }}
-      animate={{ opacity: 1, y: 0 }}
+      variants={variants}
+      initial="hidden"
+      animate={shouldReduceMotion ? "instant" : "visible"}
       transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay }}
     >
       {children}

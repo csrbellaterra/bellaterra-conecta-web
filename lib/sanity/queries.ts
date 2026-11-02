@@ -178,7 +178,11 @@ export const doorFieldsProjection = `{
   finalCtaHeadline,
   finalCtaBody,
   finalCtaLabel,
-  "finalCtaForm": finalCtaForm->slug.current
+  "finalCtaForm": finalCtaForm->slug.current,
+  "cinematicIntro": cinematicIntro{
+    enabled,
+    "scenes": scenes[]{ "media": media ${media2Projection}, eyebrow, title, body, motion }
+  }
 }`;
 
 export const allDoorsQuery = `

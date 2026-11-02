@@ -9,6 +9,7 @@ import navLink from "./objects/navLink";
 
 // Objetos reutilizables V2
 import media from "./objects/media";
+import cinematicScene from "./objects/cinematicScene";
 import featureItem from "./objects/featureItem";
 import timelineItem from "./objects/timelineItem";
 import stat from "./objects/stat";
@@ -70,6 +71,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   // Objetos
   imageWithAlt,
   mediaField,
+  cinematicScene,
   seoFields,
   plastyContribution,
   navLink,

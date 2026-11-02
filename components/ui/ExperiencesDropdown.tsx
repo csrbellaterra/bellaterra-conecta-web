@@ -119,7 +119,7 @@ export default function ExperiencesDropdown({
         onClick={() => setOpen((v) => !v)}
         onFocus={() => setOpen(true)}
         className={cn(
-          "flex items-center gap-1.5 font-sans text-[13px] uppercase tracking-[0.12em] transition-colors",
+          "flex items-center gap-1.5 whitespace-nowrap font-sans text-[13px] uppercase tracking-[0.08em] transition-colors xl:tracking-[0.12em]",
           showSolidChrome ? "text-muted hover:text-text" : "text-white/90 hover:text-white [text-shadow:0_1px_12px_rgba(20,19,15,0.5)]"
         )}
       >

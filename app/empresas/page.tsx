@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { draftMode } from "next/headers";
 import { getAllDoors, getDoor } from "@/lib/content";
-import DoorPageTemplateV2 from "@/components/DoorPageTemplateV2";
+import DoorExperienceTemplate from "@/components/DoorExperienceTemplate";
 
 const DOOR_ID = "empresas" as const;
 
@@ -19,5 +19,5 @@ export default async function EmpresasPage() {
   const { isEnabled: preview } = draftMode();
   const [door, allDoors] = await Promise.all([getDoor(DOOR_ID, preview), getAllDoors(preview)]);
   if (!door) notFound();
-  return <DoorPageTemplateV2 door={door} allDoors={allDoors} />;
+  return <DoorExperienceTemplate door={door} allDoors={allDoors} />;
 }

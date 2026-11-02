@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
+import { useHydratedReducedMotion } from "@/lib/useHydratedReducedMotion";
 import type { MediaField } from "@/types/content";
 import Media from "@/components/ui/Media";
 import { cn } from "@/lib/utils";
@@ -33,7 +34,7 @@ export type EditorialMediaListItem = {
  */
 export default function EditorialMediaList({ items }: { items: EditorialMediaListItem[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const shouldReduceMotion = useReducedMotion();
+  const shouldReduceMotion = useHydratedReducedMotion();
   const activeMedia = items[activeIndex]?.media;
 
   return (
@@ -41,7 +42,7 @@ export default function EditorialMediaList({ items }: { items: EditorialMediaLis
       {/* Columna de la lista — visible siempre */}
       <ul className="flex flex-col">
         {items.map((item, index) => (
-          <li key={item.label} className="border-t border-border first:border-t-0">
+          <li key={`${item.label}-${index}`} className="border-t border-border first:border-t-0">
             <button
               type="button"
               onMouseEnter={() => setActiveIndex(index)}

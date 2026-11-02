@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useHydratedReducedMotion } from "@/lib/useHydratedReducedMotion";
 
 /**
  * Indicador de scroll animado en la esquina inferior del hero
@@ -8,7 +9,7 @@ import { motion, useReducedMotion } from "motion/react";
  * forzar todo HeroSection a serlo.
  */
 export default function ScrollCue({ label, href }: { label: string; href: string }) {
-  const shouldReduceMotion = useReducedMotion();
+  const shouldReduceMotion = useHydratedReducedMotion();
 
   return (
     <a

@@ -71,10 +71,12 @@ function heroVideoSources(media: MediaField): HeroVideoSources | null {
   };
 }
 
+/** Una línea por frase o, si es una sola frase, corte tras la primera coma ("Una finca, / diferentes…"). */
 function splitTitleLines(title: string): string[] {
   const parts = title.split(". ").map((p) => p.trim()).filter(Boolean);
-  if (parts.length <= 1) return [title];
-  return parts.map((part, i) => (i < parts.length - 1 && !part.endsWith(".") ? `${part}.` : part));
+  if (parts.length > 1) return parts.map((part, i) => (i < parts.length - 1 && !part.endsWith(".") ? `${part}.` : part));
+  const comma = title.indexOf(", ");
+  return comma > 0 ? [title.slice(0, comma + 1), title.slice(comma + 2)] : [title];
 }
 
 export default function HomeHero({ block }: { block: HeroBlock }) {
@@ -126,7 +128,7 @@ export default function HomeHero({ block }: { block: HeroBlock }) {
           ) : null}
 
           <HeroReveal delay={0.1}>
-            <h1 className="max-w-4xl font-serif text-[3.1rem] max-sm:[@media(max-height:720px)]:text-[2.6rem] leading-[1.04] text-white sm:text-7xl lg:text-[5.75rem] [@media(min-width:640px)_and_(max-width:1199px)_and_(max-aspect-ratio:4/5)]:text-6xl">
+            <h1 className="max-w-4xl font-serif text-[3.1rem] max-sm:[@media(max-height:720px)]:text-[2.6rem] leading-[1.04] text-white sm:text-7xl lg:max-w-5xl lg:text-[5rem] xl:text-[5.75rem] [@media(min-width:640px)_and_(max-width:1199px)_and_(max-aspect-ratio:4/5)]:text-6xl">
               {splitTitleLines(title).map((line, i) => (
                 <span key={i} className="block drop-shadow-[0_2px_18px_rgba(20,19,15,0.5)]">
                   {line}

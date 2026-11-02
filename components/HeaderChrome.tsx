@@ -33,7 +33,11 @@ export default function HeaderChrome({
 
   useEffect(() => {
     if (!isTransparent) return;
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    // Sobre una introducción cinematográfica ([data-header-overlay]) sigue transparente hasta que termina.
+    const onScroll = () => {
+      const overlay = document.querySelector("[data-header-overlay]");
+      setScrolled(window.scrollY > 40 && !(overlay && overlay.getBoundingClientRect().bottom > 80));
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -77,11 +81,11 @@ export default function HeaderChrome({
               priority
             />
           ) : null}
-          <span className={cn("font-serif text-base tracking-wide sm:text-lg", !showSolidChrome && "[text-shadow:0_1px_12px_rgba(20,19,15,0.5)]")}>{siteTitle}</span>
+          <span className={cn("whitespace-nowrap font-serif text-base tracking-wide sm:text-lg", !showSolidChrome && "[text-shadow:0_1px_12px_rgba(20,19,15,0.5)]")}>{siteTitle}</span>
         </Link>
 
         <nav aria-label="Navegación principal" className="hidden lg:block">
-          <ul className="flex items-center gap-6 xl:gap-9">
+          <ul className="flex items-center gap-5 xl:gap-9">
             {VISIBLE_NAV_LINKS.map((link) =>
               "children" in link && link.children ? (
                 <ExperiencesDropdown key={link.label} label={link.label} items={link.children} showSolidChrome={showSolidChrome} />
@@ -90,7 +94,7 @@ export default function HeaderChrome({
                   <Link
                     href={link.url}
                     className={cn(
-                      "font-sans text-[13px] uppercase tracking-[0.12em] transition-colors",
+                      "whitespace-nowrap font-sans text-[13px] uppercase tracking-[0.08em] transition-colors xl:tracking-[0.12em]",
                       showSolidChrome ? "text-muted hover:text-text" : "text-white/90 hover:text-white [text-shadow:0_1px_12px_rgba(20,19,15,0.5)]"
                     )}
                   >

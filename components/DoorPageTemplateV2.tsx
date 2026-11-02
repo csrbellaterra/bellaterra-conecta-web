@@ -1,7 +1,9 @@
 import type { Door } from "@/types/content";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import DoorHero from "@/components/sections/door/DoorHero";
+import DoorIntro, { DOOR_INFO_ID } from "@/components/sections/door/DoorIntro";
+import { experienceDoor } from "@/lib/doorExperience";
+import { withApprovedImages, withPortalImages } from "@/lib/approvedMedia";
 import DoorFeatureBlocks from "@/components/sections/door/DoorFeatureBlocks";
 import DoorTimeline from "@/components/sections/door/DoorTimeline";
 import DoorSpacesGallery from "@/components/sections/door/DoorSpacesGallery";
@@ -21,18 +23,26 @@ import DoorRelatedExperiences from "@/components/sections/door/DoorRelatedExperi
  * Cabecera transparente sobre el hero (mismo lenguaje que la Home),
  * a diferencia de DoorPageTemplate (V1), que usa variant="solid".
  */
-export default function DoorPageTemplateV2({ door, allDoors }: { door: Door; allDoors: Door[] }) {
+export default function DoorPageTemplateV2({ door: sanityDoor, allDoors: sanityDoors }: { door: Door; allDoors: Door[] }) {
+  // Fotos antiguas de Sanity con personas sin autorización: sustituidas (lib/approvedMedia.ts).
+  const door = withApprovedImages(sanityDoor);
+  const allDoors = withPortalImages(sanityDoors);
+  // CTA y foto de cierre V2 (etiquetas heredadas de la V1 y fotos de 2024 fuera).
+  const closingDoor = experienceDoor(door);
   return (
     <>
       <Header variant="transparent" />
       <main>
-        <DoorHero door={door} />
-        <DoorFeatureBlocks door={door} />
-        <DoorTimeline door={door} />
-        <DoorSpacesGallery door={door} />
-        <DoorPlastyBlock door={door} />
-        <DoorFinalCta door={door} />
-        <DoorRelatedExperiences door={door} allDoors={allDoors} />
+        <DoorIntro door={door} />
+        {/* Bloque B: destino de «Saltar introducción». */}
+        <div id={DOOR_INFO_ID} tabIndex={-1} className="scroll-mt-16 outline-none">
+          <DoorFeatureBlocks door={door} />
+          <DoorTimeline door={door} />
+          <DoorSpacesGallery door={door} />
+          <DoorPlastyBlock door={door} />
+        </div>
+        <DoorFinalCta door={closingDoor} />
+        <DoorRelatedExperiences door={closingDoor} allDoors={allDoors} />
       </main>
       <Footer />
     </>

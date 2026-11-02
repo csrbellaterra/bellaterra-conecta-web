@@ -91,13 +91,13 @@ export const PRIMARY_DOOR_IDS = ["empresas", "eventos", "estancias", "comunidad"
 export type PrimaryDoorId = (typeof PRIMARY_DOOR_IDS)[number];
 
 export const HOME_V2_COPY = {
-  heroTitle: "Una finca. Cuatro formas de vivirla.",
+  heroTitle: "Una finca, diferentes formas de vivirla",
   heroCtaLabel: "Explorar experiencias",
   heroCtaUrl: "#experiencias",
   portalsHeading: "¿Qué te gustaría vivir aquí?",
   portalsIntroduction: "Un mismo lugar. Cuatro experiencias diferentes.",
   identityHeadline: "Cuatro formas de entrar.\nUn mismo lugar al que volver.",
-  seoTitle: "Bellaterra Conecta — Una finca. Cuatro formas de vivirla.",
+  seoTitle: "Bellaterra Conecta — Una finca, diferentes formas de vivirla",
   seoDescription:
     "Finca en Bellaterra, Barcelona, para empresas, eventos, estancias y comunidad. Cuatro formas de entrar, un mismo lugar al que volver.",
 };
@@ -119,6 +119,9 @@ export const HOME_PORTAL_COPY: Record<PrimaryDoorId, { description: string }> = 
  * escriba en Sanity prevalece siempre.
  */
 const LEGACY_V1_VALUES = new Set([
+  // Titular V2 anterior (sustituido el 02/11/2026).
+  "Una finca. Cuatro formas de vivirla.",
+  "Bellaterra Conecta — Una finca. Cuatro formas de vivirla.",
   "¿Qué te gustaría hacer aquí?",
   "Bellaterra Conecta reúne distintas experiencias en una misma finca. Encuentra la que te trae hasta aquí y descubre todo lo demás.",
   "Descubre la finca",

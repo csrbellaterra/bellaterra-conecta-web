@@ -106,6 +106,20 @@ export type Door = {
   finalCtaLabel?: string;
   /** slug del formulario; tiene prioridad sobre primaryForm y sobre el slug de la puerta */
   finalCtaForm?: string;
+  /** Introducción cinematográfica por scroll (bloque A); apagada si no está activada */
+  cinematicIntro?: { enabled?: boolean; scenes?: CinematicSceneDoc[] };
+};
+
+/** Movimiento de cámara simulado sobre la foto (nunca altera la imagen). */
+export type CinematicMotion = "pushIn" | "pullOut" | "driftLeft" | "driftRight";
+
+/** Escena de la introducción cinematográfica tal y como llega de Sanity. */
+export type CinematicSceneDoc = {
+  media?: Media;
+  eyebrow?: string;
+  title?: string;
+  body?: string;
+  motion?: CinematicMotion;
 };
 
 export type DoorIconName = "briefcase" | "party" | "bed" | "community" | "pickleball";
