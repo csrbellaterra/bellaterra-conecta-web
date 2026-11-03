@@ -160,15 +160,15 @@ export const DOOR_EXPERIENCE: Partial<Record<DoorId, DoorExperience>> = {
 
   eventos: {
     ctaLabel: "Organizar mi evento",
-    // Ambiente → personas → detalles → el espacio a la luz del día.
+    // La finca → personas → detalles → la atmósfera del atardecer.
     scenes: [
       scene(
         "eventos",
-        "noche",
-        "Celebración al atardecer junto a la piscina, con guirnaldas de luces entre los pinos",
-        { eyebrow: "01 · Celebrar", title: "Celebraciones entre pinos, junto al agua.", body: "Bodas, aniversarios y fiestas con las personas que importan." },
+        "jardin",
+        "Piscina y jardín entre pinos, con sombrillas y pérgola al fondo",
+        { eyebrow: "01 · El jardín", title: "Piscina, pinos y espacio para que la fiesta respire.", body: "Bodas, aniversarios y fiestas con las personas que importan." },
         "pushIn",
-        { ...FULL, focus: "50% 62%" }
+        { ...FULL, focus: "50% 55%" }
       ),
       scene(
         "eventos",
@@ -196,11 +196,11 @@ export const DOOR_EXPERIENCE: Partial<Record<DoorId, DoorExperience>> = {
       ),
       scene(
         "eventos",
-        "jardin",
-        "Piscina y jardín entre pinos, con sombrillas y pérgola al fondo",
-        { eyebrow: "05 · El jardín", title: "Piscina, pinos y espacio para que la fiesta respire." },
+        "noche",
+        "Celebración al atardecer junto a la piscina, con guirnaldas de luces entre los pinos",
+        { eyebrow: "05 · La noche", title: "Cuando cae el sol, se encienden las luces." },
         "pullOut",
-        { ...FULL, focus: "50% 55%" }
+        { ...FULL, focus: "50% 62%" }
       ),
     ],
   },
@@ -221,17 +221,9 @@ export const DOOR_EXPERIENCE: Partial<Record<DoorId, DoorExperience>> = {
       ),
       scene(
         "estancias",
-        "habitacion-doble",
-        "Habitación doble con cama grande, suelo de baldosa roja y chimenea",
-        { eyebrow: "02 · Descansar", title: "Habitaciones con el carácter de la casa." },
-        "driftRight",
-        { ...FULL, focus: "50% 60%", review: "validation" } // 2024 · pendiente de confirmar
-      ),
-      scene(
-        "estancias",
         "habitacion-chimenea",
         "Habitación con chimenea, pared de piedra y ventanales hacia los árboles",
-        { eyebrow: "03 · Quedarse", title: "Piedra, madera y una chimenea encendida.", body: "Cuando fuera refresca." },
+        { eyebrow: "02 · Quedarse", title: "Piedra, madera y una chimenea encendida.", body: "Cuando fuera refresca." },
         "pushIn",
         { review: "validation" } // 2024 · pendiente de confirmar
       ),
@@ -239,9 +231,17 @@ export const DOOR_EXPERIENCE: Partial<Record<DoorId, DoorExperience>> = {
         "estancias",
         "literas",
         "Habitación con literas de madera y cama preparada con toallas",
-        { eyebrow: "04 · Juntos", title: "Espacio para venir en familia o con amigos.", body: "Por habitaciones o la casa entera." },
+        { eyebrow: "03 · Juntos", title: "Espacio para venir en familia o con amigos.", body: "Por habitaciones o la casa entera." },
         "pullOut",
         { review: "validation" } // 2024 · pendiente de confirmar
+      ),
+      scene(
+        "estancias",
+        "habitacion-doble",
+        "Habitación doble con cama grande, suelo de baldosa roja y chimenea",
+        { eyebrow: "04 · Descansar", title: "Habitaciones con el carácter de la casa." },
+        "driftRight",
+        { ...FULL, focus: "50% 60%", review: "validation" } // 2024 · pendiente de confirmar
       ),
     ],
   },
@@ -284,11 +284,11 @@ export const DOOR_EXPERIENCE: Partial<Record<DoorId, DoorExperience>> = {
       ),
       scene(
         "comunidad",
-        "mesa",
-        "Mesa preparada para una comida compartida en el comedor, junto a los ventanales",
-        { eyebrow: "04 · Compartir", title: "Y después, una mesa para seguir la conversación." },
-        "panUp",
-        { ...FULL, focus: "50% 60%" } // vertical: la mesa junto a los ventanales
+        "encuentro",
+        "Personas reunidas junto a la piscina y la pérgola, entre pinos y olivos",
+        { eyebrow: "04 · Compartir", title: "Y después, tiempo para seguir la conversación." },
+        "pullOut",
+        { ...FULL, focus: "50% 45%" } // IMG_5551 · zona de pérgola junto a la piscina
       ),
     ],
   },
