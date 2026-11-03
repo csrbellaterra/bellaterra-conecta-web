@@ -111,7 +111,8 @@ export type Door = {
 };
 
 /** Movimiento de cámara simulado sobre la foto (nunca altera la imagen). */
-export type CinematicMotion = "pushIn" | "pullOut" | "driftLeft" | "driftRight";
+// panUp/panDown solo se usan desde el código (lib/doorExperience.ts), no en el Studio.
+export type CinematicMotion = "pushIn" | "pullOut" | "driftLeft" | "driftRight" | "panUp" | "panDown";
 
 /** Escena de la introducción cinematográfica tal y como llega de Sanity. */
 export type CinematicSceneDoc = {

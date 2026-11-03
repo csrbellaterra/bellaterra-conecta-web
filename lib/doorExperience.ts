@@ -1,6 +1,6 @@
 import type { CinematicMotion, Door, DoorId, MediaField, SanityImage } from "@/types/content";
 import type { IntroScene, SceneReview } from "@/lib/cinematic";
-import { INTRO_PLACEHOLDERS } from "@/lib/introPlaceholders";
+import { INTRO_IMAGES } from "@/lib/introPlaceholders";
 
 export { PORTRAIT_MEDIA, type IntroScene } from "@/lib/cinematic";
 
@@ -15,9 +15,10 @@ export { PORTRAIT_MEDIA, type IntroScene } from "@/lib/cinematic";
  * la V1 (textos y fotos que ya no representan la web actual).
  *
  * Fotos de las introducciones: derivados web de «Fotos Casa\SELECCION FOTOS
- * PUERTAS» (02/11/2026) y de las fotos ya aprobadas del 30/10 y del vídeo de
- * la Home, recortados por escena para escritorio (16:10) y móvil (3:5), con
- * anchos estáticos (scratchpad anchos.py). Los originales no se tocan.
+ * PUERTAS» (02/11/2026, todas con autorización de publicación) y de las fotos
+ * ya aprobadas del 30/10 y del vídeo de la Home: en escritorio, la foto entera
+ * en su proporción original, encuadrada con `focus`; en móvil, un recorte por
+ * escena. Anchos estáticos generados aparte; los originales no se tocan.
  */
 
 type DoorExperience = {
@@ -36,8 +37,10 @@ type DoorExperience = {
 };
 
 /**
- * Escena con sus dos recortes, `/images/experiencias/<puerta>/<nombre>-desktop|mobile.jpg`,
- * y los anchos estáticos generados a su lado (-1280, -1920 y -750).
+ * Escena con sus dos derivados, `/images/experiencias/<puerta>/<nombre>-desktop|mobile.jpg`,
+ * con medidas, anchos estáticos y marcador de lib/introPlaceholders.ts. La
+ * composición sale de la propia foto: una vertical se enmarca en escritorio y
+ * un recorte móvil más ancho que 3:5 se enmarca en móvil (ver ScenePicture).
  */
 function scene(
   door: DoorId,
@@ -45,26 +48,26 @@ function scene(
   alt: string,
   text: { eyebrow?: string; title: string; body?: string },
   motion: CinematicMotion,
-  review?: SceneReview
+  { fullBleed, ...options }: { focus?: string; review?: SceneReview; fullBleed?: boolean } = {}
 ): IntroScene {
   const base = `/images/experiencias/${door}/${name}`;
-  const desktop = `${base}-desktop.jpg`;
-  const mobile = `${base}-mobile.jpg`;
+  const desktop = INTRO_IMAGES[`${base}-desktop.jpg`];
+  const mobile = INTRO_IMAGES[`${base}-mobile.jpg`];
   return {
-    image: { url: desktop, alt, width: 2400, height: 1500 },
-    mobileImage: { url: mobile, alt, width: 1200, height: 2000 },
-    srcSet: {
-      desktop: `${base}-desktop-1280.jpg 1280w, ${base}-desktop-1920.jpg 1920w, ${desktop} 2400w`,
-      mobile: `${base}-mobile-750.jpg 750w, ${mobile} 1200w`,
-    },
-    placeholder: INTRO_PLACEHOLDERS[desktop]
-      ? { desktop: INTRO_PLACEHOLDERS[desktop], mobile: INTRO_PLACEHOLDERS[mobile] }
-      : undefined,
+    image: { url: `${base}-desktop.jpg`, alt, width: desktop.width, height: desktop.height },
+    mobileImage: { url: `${base}-mobile.jpg`, alt, width: mobile.width, height: mobile.height },
+    srcSet: { desktop: desktop.srcSet, mobile: mobile.srcSet },
+    placeholder: { desktop: desktop.placeholder, mobile: mobile.placeholder },
+    // fullBleed: siempre a sangre (recorte con `focus`), aunque la foto sea vertical.
+    framed: fullBleed ? undefined : { desktop: desktop.height > desktop.width, mobile: mobile.width / mobile.height > 0.7 },
     ...text,
     motion,
-    review,
+    ...options,
   };
 }
+
+// Escenas a pantalla completa, sin composición enmarcada (hoy, todas las puertas).
+const FULL = { fullBleed: true };
 
 const empresasImage = (name: string, alt: string): SanityImage => ({
   url: `/images/experiencias/empresas/${name}.jpg`,
@@ -76,53 +79,47 @@ const empresasImage = (name: string, alt: string): SanityImage => ({
 export const DOOR_EXPERIENCE: Partial<Record<DoorId, DoorExperience>> = {
   empresas: {
     ctaLabel: "Solicitar una propuesta",
-    // Publicables hoy: sala, salón y terraza (fotos del 30/10 e IMG_5395, sin
-    // personas). Las de personas entran solas cuando se autoricen.
+    // Espacios de trabajo → actividad del equipo → conectar dentro y fuera.
     scenes: [
-      scene(
-        "empresas",
-        "sala",
-        "Sala de reuniones con mesa de madera, sillas mostaza y pantalla, junto a los ventanales",
-        { eyebrow: "01 · Reunirse", title: "Una mesa para pensar juntos, con luz natural.", body: "Reuniones, comités y sesiones de trabajo." },
-        "pushIn"
-      ),
       scene(
         "empresas",
         "reunion",
         "Reunión de trabajo alrededor de una mesa larga con pantalla, vista desde arriba",
-        { eyebrow: "02 · Trabajar", title: "Sesiones de trabajo alrededor de la mesa." },
+        { eyebrow: "01 · Reunirse", title: "Reuniones con luz natural y espacio para pensar.", body: "Comités, sesiones de trabajo y reuniones de dirección." },
         "pushIn",
-        "consent" // DSC04690 · personas reconocibles
+        { ...FULL, focus: "50% 55%" }
       ),
       scene(
         "empresas",
         "presentar",
         "Presentación ante un grupo en el salón de doble altura con pantalla",
-        { eyebrow: "03 · Presentar", title: "Un salón de doble altura para presentar y formar.", body: "Formaciones, charlas y presentaciones." },
-        "pushIn",
-        "consent" // IMG_5467 · personas reconocibles
+        { eyebrow: "02 · Formar", title: "Un salón de doble altura para presentar y formar.", body: "Formaciones, charlas y presentaciones." },
+        "panUp",
+        { ...FULL, focus: "50% 62%" } // vertical: ponente, pantalla y público
       ),
       scene(
         "empresas",
         "salon",
         "Salón de doble altura con mesas preparadas, sillas mostaza y la escalera hacia el altillo",
-        { eyebrow: "04 · Compartir mesa", title: "A mediodía, el salón para comer todos juntos.", body: "Comidas y pausas sin salir de la finca." },
-        "driftRight"
+        { eyebrow: "03 · Compartir mesa", title: "A mediodía, el salón para comer todos juntos.", body: "Comidas y pausas sin salir de la finca." },
+        "driftLeft",
+        { ...FULL, focus: "50% 55%" }
       ),
       scene(
         "empresas",
         "aire-libre",
         "Grupo sentado al aire libre junto a las pistas, con pinos y vistas al valle",
-        { eyebrow: "05 · Encontrarse", title: "Dinámicas al aire libre, frente al paisaje.", body: "Talleres y actividades de equipo en el exterior." },
-        "pullOut",
-        "consent" // IMG_5474 · personas a media distancia
+        { eyebrow: "04 · Salir fuera", title: "Dinámicas al aire libre, frente al paisaje.", body: "Talleres y actividades de equipo en el exterior." },
+        "driftRight",
+        { ...FULL, focus: "50% 62%" }
       ),
       scene(
         "empresas",
         "terraza-vistas",
         "Terraza con mesas de madera y sillas verdes entre pinos, con vistas a la sierra",
-        { eyebrow: "06 · Conectar", title: "Y para cerrar la jornada, la terraza entre pinos.", body: "Café, conversación y vistas a la sierra." },
-        "pullOut"
+        { eyebrow: "05 · Conectar", title: "Y para cerrar la jornada, la terraza entre pinos.", body: "Café, conversación y vistas a la sierra." },
+        "pullOut",
+        { ...FULL, focus: "50% 55%" }
       ),
     ],
     formats: [
@@ -163,43 +160,47 @@ export const DOOR_EXPERIENCE: Partial<Record<DoorId, DoorExperience>> = {
 
   eventos: {
     ctaLabel: "Organizar mi evento",
+    // Ambiente → personas → detalles → el espacio a la luz del día.
     scenes: [
+      scene(
+        "eventos",
+        "noche",
+        "Celebración al atardecer junto a la piscina, con guirnaldas de luces entre los pinos",
+        { eyebrow: "01 · Celebrar", title: "Celebraciones entre pinos, junto al agua.", body: "Bodas, aniversarios y fiestas con las personas que importan." },
+        "pushIn",
+        { ...FULL, focus: "50% 62%" }
+      ),
+      scene(
+        "eventos",
+        "ceremonia",
+        "Invitados sentados en una ceremonia al aire libre, con pinos y la sierra al fondo",
+        { eyebrow: "02 · El momento", title: "Ceremonias al aire libre, con la sierra de fondo." },
+        "driftRight",
+        { ...FULL, focus: "50% 62%" }
+      ),
       scene(
         "eventos",
         "mesa",
         "Mesa larga de banquete con platos, velas y caminos de yute junto a la piscina",
-        { eyebrow: "01 · La mesa", title: "Una mesa larga junto al agua.", body: "Bodas, aniversarios y celebraciones con las personas que importan." },
-        "pushIn"
-      ),
-      scene(
-        "eventos",
-        "piscina",
-        "Piscina y jardín entre pinos, con sombrillas y pérgola al fondo",
-        { eyebrow: "02 · El jardín", title: "Piscina, pinos y espacio para que la fiesta respire." },
-        "driftRight",
-        "consent" // IMG_5107 · caras legibles en el grupo bajo la pérgola
+        { eyebrow: "03 · La mesa", title: "Una mesa larga para que nadie quede lejos." },
+        "panUp",
+        { ...FULL, focus: "50% 40%" } // vertical: la mesa hacia la piscina
       ),
       scene(
         "eventos",
         "aperitivo",
         "Buffet de aperitivos al aire libre sobre una mesa larga con mantel blanco",
-        { eyebrow: "03 · El aperitivo", title: "Aperitivos y buffets al aire libre.", body: "Cada celebración, a su manera." },
-        "driftLeft"
+        { eyebrow: "04 · El aperitivo", title: "Aperitivos y buffets al aire libre.", body: "Cada celebración, a su manera." },
+        "driftLeft",
+        { ...FULL, focus: "50% 55%" }
       ),
       scene(
         "eventos",
-        "noche",
-        "Celebración al atardecer junto a la piscina, con guirnaldas de luces",
-        { eyebrow: "04 · La noche", title: "Cuando cae el sol, se encienden las luces." },
-        "pushIn",
-        "consent" // IMG_4713 · invitados reconocibles
-      ),
-      scene(
-        "eventos",
-        "vistas",
-        "Terraza con mesas de madera bajo un gran pino, con vistas al valle",
-        { eyebrow: "05 · El lugar", title: "Y siempre, las vistas desde la terraza." },
-        "pullOut"
+        "jardin",
+        "Piscina y jardín entre pinos, con sombrillas y pérgola al fondo",
+        { eyebrow: "05 · El jardín", title: "Piscina, pinos y espacio para que la fiesta respire." },
+        "pullOut",
+        { ...FULL, focus: "50% 55%" }
       ),
     ],
   },
@@ -216,7 +217,7 @@ export const DOOR_EXPERIENCE: Partial<Record<DoorId, DoorExperience>> = {
         "Habitación luminosa con cama, zona de estar con sofá azul y mesa de comedor",
         { eyebrow: "01 · Despertar", title: "Habitaciones amplias, llenas de luz.", body: "Para quedarse unos días o unas semanas." },
         "pushIn",
-        "validation" // 2024 · pendiente de confirmar
+        { review: "validation" } // 2024 · pendiente de confirmar
       ),
       scene(
         "estancias",
@@ -224,7 +225,7 @@ export const DOOR_EXPERIENCE: Partial<Record<DoorId, DoorExperience>> = {
         "Habitación doble con cama grande, suelo de baldosa roja y chimenea",
         { eyebrow: "02 · Descansar", title: "Habitaciones con el carácter de la casa." },
         "driftRight",
-        "validation" // 2024 · pendiente de confirmar
+        { ...FULL, focus: "50% 60%", review: "validation" } // 2024 · pendiente de confirmar
       ),
       scene(
         "estancias",
@@ -232,7 +233,7 @@ export const DOOR_EXPERIENCE: Partial<Record<DoorId, DoorExperience>> = {
         "Habitación con chimenea, pared de piedra y ventanales hacia los árboles",
         { eyebrow: "03 · Quedarse", title: "Piedra, madera y una chimenea encendida.", body: "Cuando fuera refresca." },
         "pushIn",
-        "validation" // 2024 · pendiente de confirmar
+        { review: "validation" } // 2024 · pendiente de confirmar
       ),
       scene(
         "estancias",
@@ -240,22 +241,21 @@ export const DOOR_EXPERIENCE: Partial<Record<DoorId, DoorExperience>> = {
         "Habitación con literas de madera y cama preparada con toallas",
         { eyebrow: "04 · Juntos", title: "Espacio para venir en familia o con amigos.", body: "Por habitaciones o la casa entera." },
         "pullOut",
-        "validation" // 2024 · pendiente de confirmar
+        { review: "validation" } // 2024 · pendiente de confirmar
       ),
     ],
   },
 
   comunidad: {
     ctaLabel: "Participar en la comunidad",
-    // Hasta autorizar las fotos con personas: portada editorial con la foto 12
-    // del vídeo de la Home (aprobada, sin personas). La secuencia completa
-    // queda lista y se activa sola al quitar los "consent".
+    // Portada editorial (foto 12 del vídeo de la Home, sin personas) por si
+    // alguna escena dejara de poder publicarse y no quedaran suficientes.
     cover: scene(
       "comunidad",
       "portada",
       "Pistas de pickleball bajo un gran pino, con la casa y su terraza al fondo",
       { title: "Pistas, jardín y una comunidad que crece." },
-      "pullOut"
+      "pushIn"
     ),
     scenes: [
       scene(
@@ -263,31 +263,32 @@ export const DOOR_EXPERIENCE: Partial<Record<DoorId, DoorExperience>> = {
         "pistas",
         "Pistas de pickleball bajo un gran pino, con la casa y su terraza al fondo",
         { eyebrow: "01 · Encontrarse", title: "Un lugar al que volver.", body: "Pistas, jardín y una comunidad que crece." },
-        "pullOut",
-        "consent" // IMG_5409 · caras legibles en el balcón y en la pista
-      ),
-      scene(
-        "comunidad",
-        "juego",
-        "Partido de pickleball en las pistas de la finca, rodeadas de pinos",
-        { eyebrow: "02 · Jugar", title: "Encuentros de pickleball para jugar y conocerse." },
-        "driftRight",
-        "consent" // IMG_5408 · jugadores reconocibles
+        "pushIn",
+        { focus: "50% 62%" }
       ),
       scene(
         "comunidad",
         "yoga",
         "Sesión de yoga sobre esterillas junto a la piscina",
-        { eyebrow: "03 · Cuidarse", title: "Yoga y bienestar junto a la piscina." },
-        "pushIn",
-        "consent" // IMG_5412 · participantes a media distancia
+        { eyebrow: "02 · Cuidarse", title: "Yoga y bienestar junto a la piscina." },
+        "panUp",
+        { ...FULL, focus: "50% 55%" } // vertical: esterillas junto a la piscina
+      ),
+      scene(
+        "comunidad",
+        "juego",
+        "Partido de pickleball en las pistas de la finca, rodeadas de pinos",
+        { eyebrow: "03 · Jugar", title: "Encuentros de pickleball para jugar y conocerse." },
+        "driftRight",
+        { focus: "50% 62%" }
       ),
       scene(
         "comunidad",
         "mesa",
         "Mesa preparada para una comida compartida en el comedor, junto a los ventanales",
         { eyebrow: "04 · Compartir", title: "Y después, una mesa para seguir la conversación." },
-        "pushIn"
+        "panUp",
+        { ...FULL, focus: "50% 60%" } // vertical: la mesa junto a los ventanales
       ),
     ],
   },
@@ -360,7 +361,11 @@ export function experienceDoor(door: Door): Door {
   const experience = getDoorExperience(door.id);
   if (!experience) return door;
   const intro = resolveIntro(door);
-  const closing = intro?.kind === "film" ? intro.scenes[intro.scenes.length - 1] : intro?.scene;
+  // La última escena horizontal: las verticales no sirven de fondo apaisado.
+  const closing =
+    intro?.kind === "film"
+      ? [...intro.scenes].reverse().find((s) => (s.image.width ?? 1) >= (s.image.height ?? 0)) ?? intro.scenes[0]
+      : intro?.scene;
   return {
     ...door,
     primaryCtaLabel: experienceCopy(door.primaryCtaLabel, experience.ctaLabel),

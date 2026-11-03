@@ -28,6 +28,14 @@ export type IntroScene = {
   srcSet?: { desktop: string; mobile?: string };
   /** Miniatura inline difuminada que se pinta al instante (solo la portada). */
   placeholder?: { desktop: string; mobile?: string };
+  /** Encuadre en escritorio (object-position), p. ej. "50% 60%". */
+  focus?: string;
+  /**
+   * Composición enmarcada en lugar de foto a sangre (ver app/globals.css):
+   * en escritorio, fotos verticales; en móvil, espacios horizontales que a
+   * pantalla completa perderían casi todo el ancho.
+   */
+  framed?: { desktop?: boolean; mobile?: boolean };
   eyebrow?: string;
   title: string;
   body?: string;

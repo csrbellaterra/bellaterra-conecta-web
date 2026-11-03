@@ -58,3 +58,21 @@ Las cifras y textos de aportación PLASTY (por puerta, por noche, por jornada, e
 - **Vídeo de la Home**: se monta a partir de las 13 fotografías numeradas de `Fotos Casa\Fotos Video Landing General` (storyboard en `docs/fase-cinematica/STORYBOARD_VIDEO_HOME.md`). Fidelidad a la finca real por encima de la continuidad: no inventar espacios para encadenar planos. Se sube a Sanity (`homePage.hero.media`), no al repositorio.
 - **Páginas de experiencia**: bloque A (introducción cinematográfica por scroll, 3–4 escenas, con opción de saltar) → bloque B (información comercial editorial) → bloque C (conversión hacia los formularios existentes que envían a Airtable). CTAs: Empresas → "Solicitar una propuesta"; Eventos → "Organizar mi evento"; Estancias → "Consultar disponibilidad"; Comunidad → "Participar en la comunidad". Mantener las rutas de formulario existentes.
 - **Impacto**: conservar la arquitectura existente (contador, PLASTY, Hall of Fame con consentimiento). El rediseño visual llegará más adelante, solo con cifras reales y verificadas.
+
+## Protocolo de ejecución eficiente
+
+1. **Alcance limitado**: antes de actuar, identificar los archivos directamente relacionados con la solicitud. Sin auditorías generales salvo que el problema lo requiera.
+2. **Reutilización**: aprovechar componentes, scripts, pruebas y documentación existentes; no reconstruir herramientas que ya existen.
+3. **Diagnóstico breve**: investigar la causa antes de modificar; una vez identificada, implementar directamente, sin explorar alternativas que no aporten una mejora necesaria.
+4. **Pruebas proporcionales**:
+   - cambios visuales localizados → comprobar las páginas afectadas en escritorio y móvil;
+   - cambios de lógica → typecheck y comprobaciones funcionales relacionadas;
+   - cambios de arquitectura o despliegue → build y pruebas de integración apropiadas;
+   - antes de un commit importante → typecheck y build, una sola vez, salvo errores.
+   No repetir pruebas completas que ya pasaron y que el cambio no puede afectar.
+5. **Navegador**: usar preferentemente el servidor existente; no abrir varios servidores de Next ni nuevas carpetas de compilación salvo necesidad concreta.
+6. **Capturas**: solo las necesarias para demostrar el cambio. Sin hojas de contacto, montajes ni comparativas extensas si no se piden.
+7. **Documentación**: documentar decisiones importantes y cambios estructurales, no cada ajuste visual; evitar archivos redundantes.
+8. **Resolución de problemas**: si una comprobación falla, investigar ese fallo concreto sin ampliar el alcance a problemas ajenos a la solicitud.
+9. **Calidad**: nunca omitir una comprobación necesaria para ahorrar tiempo; se elimina trabajo redundante, no fiabilidad.
+10. **Comunicación**: al terminar, informar brevemente de qué se ha cambiado, qué se ha comprobado, dónde revisarlo y qué decisión se necesita. Sin narraciones largas del proceso.

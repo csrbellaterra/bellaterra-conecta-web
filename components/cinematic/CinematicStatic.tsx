@@ -47,10 +47,12 @@ export default function CinematicStatic({ scenes, eyebrow, headline, description
           <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/15 to-transparent" />
           {scene.review ? <ReviewBadge review={scene.review} /> : null}
           <figcaption className="relative mx-auto w-full max-w-content px-5 pb-[10svh] sm:px-8 lg:px-12">
-            {scene.eyebrow ? <p className="mb-4 font-sans text-xs uppercase tracking-[0.3em] text-white/80">{scene.eyebrow}</p> : null}
-            <p className="max-w-3xl font-serif text-[2rem] leading-[1.12] text-white sm:text-5xl">{scene.title}</p>
-            {scene.body ? <p className="mt-5 max-w-lg font-sans text-base text-white/85 sm:text-lg">{scene.body}</p> : null}
-            {i === rest.length - 1 ? <CtaLink href={ctaHref} label={ctaLabel} /> : null}
+            <div className={scene.framed?.desktop ? "scene-caption-framed" : undefined}>
+              {scene.eyebrow ? <p className="mb-4 font-sans text-xs uppercase tracking-[0.3em] text-white/80">{scene.eyebrow}</p> : null}
+              <p className="max-w-3xl font-serif text-[2rem] leading-[1.12] text-white sm:text-5xl">{scene.title}</p>
+              {scene.body ? <p className="mt-5 max-w-lg font-sans text-base text-white/85 sm:text-lg">{scene.body}</p> : null}
+              {i === rest.length - 1 ? <CtaLink href={ctaHref} label={ctaLabel} /> : null}
+            </div>
           </figcaption>
         </figure>
       ))}

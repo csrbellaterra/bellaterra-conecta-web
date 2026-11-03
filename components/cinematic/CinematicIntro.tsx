@@ -118,7 +118,7 @@ function Film({ scenes, eyebrow, headline, description, ctaLabel, ctaHref, skipT
             const range: [number, number, number, number] =
               i === last ? [from, from + length * 0.14, 2, 3] : [from, from + length * 0.14, end - length * 0.12, end - length * 0.02];
             return (
-              <Caption key={scene.image.url} p={p} range={range}>
+              <Caption key={scene.image.url} p={p} range={range} className={scene.framed?.desktop ? "scene-caption-framed" : undefined}>
                 {scene.eyebrow ? (
                   <p className="mb-4 font-sans text-xs uppercase tracking-[0.3em] text-white/80">{scene.eyebrow}</p>
                 ) : null}
@@ -161,12 +161,18 @@ function Film({ scenes, eyebrow, headline, description, ctaLabel, ctaHref, skipT
   );
 }
 
-/** Movimiento de cámara simulado: escala y desplazamiento horizontal según el progreso de la escena. */
-const MOTIONS: Record<CinematicMotion, { scale: [number, number]; x: [string, string] }> = {
-  pushIn: { scale: [1.02, 1.13], x: ["0%", "0%"] },
-  pullOut: { scale: [1.15, 1.02], x: ["0%", "0%"] },
-  driftRight: { scale: [1.1, 1.1], x: ["3%", "-3%"] },
-  driftLeft: { scale: [1.1, 1.1], x: ["-3%", "3%"] },
+/**
+ * Movimiento de cámara simulado, siempre leve: recorrer la finca, no hacer
+ * zoom. La escala no pasa de 1,035 y los desplazamientos (1,4 %) caben en el
+ * margen que da esa escala, así que nunca asoma el borde de la foto.
+ */
+const MOTIONS: Record<CinematicMotion, { scale: [number, number]; x: [string, string]; y: [string, string] }> = {
+  pushIn: { scale: [1, 1.035], x: ["0%", "0%"], y: ["0%", "0%"] },
+  pullOut: { scale: [1.035, 1], x: ["0%", "0%"], y: ["0%", "0%"] },
+  driftRight: { scale: [1.035, 1.035], x: ["1.4%", "-1.4%"], y: ["0%", "0%"] },
+  driftLeft: { scale: [1.035, 1.035], x: ["-1.4%", "1.4%"], y: ["0%", "0%"] },
+  panUp: { scale: [1.035, 1.035], x: ["0%", "0%"], y: ["-1.4%", "1.4%"] },
+  panDown: { scale: [1.035, 1.035], x: ["0%", "0%"], y: ["1.4%", "-1.4%"] },
 };
 
 function SceneLayer({
@@ -183,11 +189,12 @@ function SceneLayer({
   preload: boolean;
 }) {
   const [start, end] = bounds;
-  const { scale: s, x: dx } = MOTIONS[scene.motion];
+  const { scale: s, x: dx, y: dy } = MOTIONS[scene.motion];
   // La escena se mueve desde que empieza a aparecer hasta que termina de irse.
   const span: [number, number] = [Math.max(0, start - CROSSFADE), Math.min(1, end + CROSSFADE)];
   const scale = useTransform(p, span, s);
   const x = useTransform(p, span, dx);
+  const y = useTransform(p, span, dy);
   // Las escenas se apilan: cada una entra con un fundido sobre la anterior.
   const opacity = useTransform(p, index === 0 ? [0, 1] : [start - CROSSFADE / 2, start + CROSSFADE / 2], index === 0 ? [1, 1] : [0, 1]);
   const [near, setNear] = useState(false);
@@ -197,9 +204,9 @@ function SceneLayer({
   const mounted = index <= 1 || preload || near;
 
   return (
-    <motion.div className="absolute inset-0 will-change-[opacity]" style={{ opacity }}>
+    <motion.div className="absolute inset-0 bg-ink will-change-[opacity]" style={{ opacity }}>
       {mounted ? (
-        <motion.div className="absolute inset-0 will-change-transform" style={{ scale, x }}>
+        <motion.div className="absolute inset-0 will-change-transform" style={{ scale, x, y }}>
           <ScenePicture scene={scene} priority={index === 0} />
         </motion.div>
       ) : null}
@@ -208,12 +215,24 @@ function SceneLayer({
   );
 }
 
-function Caption({ p, range, children }: { p: MotionValue<number>; range: [number, number, number, number]; children: ReactNode }) {
+function Caption({
+  p,
+  range,
+  className,
+  children,
+}: {
+  p: MotionValue<number>;
+  range: [number, number, number, number];
+  className?: string;
+  children: ReactNode;
+}) {
   const opacity = useTransform(p, range, [0, 1, 1, 0]);
   const y = useTransform(p, [range[0], range[1]], [18, 0]);
   return (
     <motion.div className="pointer-events-none absolute inset-x-0 bottom-[17svh] sm:bottom-[15svh]" style={{ opacity, y }}>
-      <div className="mx-auto w-full max-w-content px-5 sm:px-8 lg:px-12">{children}</div>
+      <div className="mx-auto w-full max-w-content px-5 sm:px-8 lg:px-12">
+        <div className={className}>{children}</div>
+      </div>
     </motion.div>
   );
 }

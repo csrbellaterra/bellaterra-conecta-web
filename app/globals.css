@@ -91,3 +91,43 @@ body {
     @apply inline-flex w-fit items-center gap-2 font-sans text-sm font-medium text-white underline decoration-white/60 decoration-2 underline-offset-4 transition-colors duration-300 hover:text-white/80;
   }
 }
+
+/* ============================================
+   INTRODUCCIONES DE LAS EXPERIENCIAS (components/cinematic)
+   La foto de cada escena va a sangre, con su encuadre (--scene-focus).
+   Las que no pueden llenar la pantalla sin perder el espacio se
+   «enmarcan»: la foto entera sobre el fondo liso de la escena, sin
+   recortes extremos ni fondos difuminados. Las dos media queries son
+   las de PORTRAIT_MEDIA (lib/cinematic.ts) y su complementaria.
+   ============================================ */
+.scene-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+@media (min-width: 768px) and (min-aspect-ratio: 4/5) {
+  .scene-img {
+    object-position: var(--scene-focus, 50% 50%);
+  }
+  /* Foto vertical en escritorio: entera, a la derecha; el texto queda a su izquierda. */
+  .scene-img[data-framed-desktop] {
+    inset: 13svh max(2rem, 7vw) auto auto;
+    width: auto;
+    max-width: 44vw;
+    height: 72svh;
+    object-fit: contain;
+  }
+  .scene-caption-framed {
+    max-width: 44vw;
+  }
+}
+@media (max-width: 767px), (max-aspect-ratio: 4/5) {
+  /* Espacio horizontal en móvil: a todo el ancho, con un recorte moderado, sobre el texto. */
+  .scene-img[data-framed-mobile] {
+    inset: 11svh 0 auto 0;
+    height: auto;
+    max-height: 52svh;
+  }
+}

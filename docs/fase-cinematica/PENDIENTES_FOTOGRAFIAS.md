@@ -1,22 +1,10 @@
 # Pendientes fotográficos — experiencias V2 (02/11/2026)
 
-## Autorizaciones de personas (bloqueadas)
+## Autorizaciones de personas
 
-Escenas con `review: "consent"` en `lib/doorExperience.ts`. Solo se ven en `next dev`; en Preview y producción se omiten. Sus derivados web no están en el repositorio (solo en local).
+Confirmada (02/11/2026) la autorización de publicación de todas las fotos con personas de `SELECCION FOTOS PUERTAS`, incluidas DSC04690, IMG_5467, IMG_5474, IMG_5107, IMG_4713, IMG_5409, IMG_5408 e IMG_5412. Ya se publican.
 
-| Experiencia | Foto | Escena |
-|---|---|---|
-| Empresas | DSC04690 | Reunión vista desde arriba |
-| Empresas | IMG_5467 | Presentación en el salón |
-| Empresas | IMG_5474 | Dinámica al aire libre |
-| Eventos | IMG_5107 | Piscina y jardín (grupo bajo la pérgola) |
-| Eventos | IMG_4713 | Celebración al atardecer |
-| Comunidad | IMG_5409 | Pistas, balcón y casa |
-| Comunidad | IMG_5408 | Partido de pickleball |
-| Comunidad | IMG_5412 | Yoga junto a la piscina |
-
-- IMG_5551 (Empresas, jardín): pendiente de validación; no se usa.
-- Al confirmar una autorización: generar sus derivados y quitar su `"consent"`. Con las tres de Comunidad, la portada editorial pasa sola a la introducción completa.
+El mecanismo de exclusión sigue disponible para cualquier foto futura sin autorización: `review: "consent"` en la escena (`lib/doorExperience.ts`) la deja solo en `next dev`. No publicar fotos de fuera de esa selección sin autorización confirmada.
 
 ## Validación de Estancias
 
@@ -24,4 +12,4 @@ Las cuatro habitaciones (_RA60292, _RA60328, _RA60459, _RA60461) son de 2024 y s
 
 ## Sanity
 
-`lib/approvedMedia.ts` sustituye al pintar 7 fotos antiguas de Sanity (personas sin autorización o banco de imágenes) por fotos aprobadas. Cuando se cambien en el Studio, se retiran de `BLOCKED`.
+`lib/approvedMedia.ts` sustituye al pintar 7 fotos antiguas de Sanity (personas sin autorización confirmada o banco de imágenes; no son de la selección) por fotos aprobadas. Cuando se cambien en el Studio, se retiran de `BLOCKED`.
